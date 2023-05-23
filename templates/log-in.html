@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+{% load static %}
+{% load socialaccount %}
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <!-- SEO Meta Tags -->
+        <meta name="description" content="Your description">
+        <meta name="author" content="Your name">
+
+        <!-- OG Meta Tags to improve the way the post looks when you share the page on Facebook, Twitter, LinkedIn -->
+        <meta property="og:site_name" content="" /> <!-- website name -->
+        <meta property="og:site" content="" /> <!-- website link -->
+        <meta property="og:title" content=""/> <!-- title shown in the actual shared post -->
+        <meta property="og:description" content="" /> <!-- description shown in the actual shared post -->
+        <meta property="og:image" content="" /> <!-- image link, make sure it's jpg -->
+        <meta property="og:url" content="" /> <!-- where do you want your post to link to -->
+        <meta name="twitter:card" content="summary_large_image"> <!-- to have large image post format in Twitter -->
+
+        <!-- Webpage Title -->
+        <title>Sign Up - Oxos</title>
+        
+        <!-- Styles -->
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/fontawesome-all.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/swiper.css' %}" rel="stylesheet">
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+        
+        <!-- Favicon  -->
+        <link rel="icon" href="{% static 'images/favicon.svg' %}">
+    </head>
+    <body>
+        
+        <!-- Navigation -->
+        <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light" aria-label="Main navigation">
+            <div class="container">
+
+                <!-- Image Logo -->
+                <a class="navbar-brand logo-image" href="{% url 'frontend:home' %}"><img src="{% static 'images/oxos2.svg' %}" alt="alternative"></a> 
+
+                <!-- Text Logo - Use this if you don't have a graphic logo -->
+                <!-- <a class="navbar-brand logo-text" href="{% url 'frontend:home' %}">Oxos</a> -->
+
+                <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+                    <ul class="navbar-nav ms-auto navbar-nav-scroll">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'frontend:home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'frontend:home' %}#features">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'frontend:home' %}#details">Details</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'frontend:home' %}#pricing">Pricing</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Drop</a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                <li><a class="dropdown-item" href="article.html">Article Details</a></li>
+                                <li><div class="dropdown-divider"></div></li>
+                                <li><a class="dropdown-item" href="terms.html">Terms Conditions</a></li>
+                                <li><div class="dropdown-divider"></div></li>
+                                <li><a class="dropdown-item" href="privacy.html">Privacy Policy</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <span class="nav-item">
+                        <a class="btn-outline-sm" href="log-in.html">Log in</a>
+                    </span>
+                </div> <!-- end of navbar-collapse -->
+            </div> <!-- end of container -->
+        </nav> <!-- end of navbar -->
+        <!-- end of navigation -->
+
+
+        <!-- Header -->
+        <header class="ex-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <h1 class="text-center">Sign in to Oxos</h1>
+                    </div> <!-- end of col -->
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </header> <!-- end of ex-header -->
+        <!-- end of header -->
+        
+        
+        <!-- Basic -->
+        <div class="ex-form-1 pt-5 pb-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 offset-xl-3">
+                        <div class="text-box mt-5 mb-5">
+                            
+                            <!-- Sign Up Form -->
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <div class="mb-4 form-floating">
+                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                    <label for="floatingInput">Email address</label>
+                                </div>
+                                <div class="mb-4 form-floating">
+                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                    <label for="floatingPassword">Password</label>
+                                </div>
+                                
+                                
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <button type="submit"  class="form-control-submit-button"  >Sign In</button>
+                                    </div>
+                                    <!-- <div class="form-group col-md-6">
+                                        <button  class="form-control-submit-button" ><a style="text-decoration: none" href="{% url 'frontend:home'%}">Sign in</a></button>
+                                    </div> -->
+                                </div>
+                                <p class="mb-4">Don't have an account? Then please <a class="blue" href="{% url 'frontend:signin' %}">Sign Up</a></p>
+                                <br>
+                                <br>
+                                <div class="dropdown-divider" ></div>
+                                <button class="form-control-submit-button-google"><a href="{% provider_login_url 'google' %}" style="text-decoration:none"><h5 style="color: white;"><i class="fab fa-google">  </i> Sign in with Google</h5></a></button>
+                                
+                                
+                            </form>
+                            <!-- end of sign up form -->
+
+                        </div> <!-- end of text-box -->
+                    </div> <!-- end of col -->
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </div> <!-- end of ex-basic-1 -->
+        <!-- end of basic -->
+
+
+        <!-- Footer -->
+         <!-- end of footer -->  
+        <!-- end of footer -->
+
+
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p class="p-small">Copyright © <a href="#your-link">Your name</a></p>
+                    </div> <!-- end of col -->
+                    <div class="col-lg-6">
+                        <p class="p-small">Distributed By<a href="https://themewagon.com/"> Themewagon</a></p>
+                    </div> <!-- end of col -->
+                </div> <!-- enf of row -->
+            </div> <!-- end of container -->
+        </div> <!-- end of copyright --> 
+        <!-- end of copyright -->
+        
+
+        <!-- Back To Top Button -->
+        <button onclick="topFunction()" id="myBtn">
+            <img src="{% static 'images/up-arrow.png' %}" alt="alternative">
+        </button>
+        <!-- end of back to top button -->
+            
+        <!-- Scripts -->
+        <script src="{% static 'js/bootstrap.min.js' %}"></script> <!-- Bootstrap framework -->
+        <script src="{% static 'js/swiper.min.js' %}"></script> <!-- Swiper for image and text sliders -->
+        <script src="{% static 'js/purecounter.min.js' %}"></script> <!-- Purecounter counter for statistics numbers -->
+        <script src="{% static 'js/replaceme.min.js' %}"></script> <!-- ReplaceMe for rotating text -->
+        <script src="{% static 'js/scripts.js' %}"></script> <!-- Custom scripts -->
+    </body>
+</html>
