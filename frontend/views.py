@@ -12,7 +12,8 @@ from django.core.mail import send_mail
 from django.template import loader, Template
 from django.template.loader import render_to_string
 from django.core import mail
-from datetime import datetime
+from datetime import datetime, timedelta
+from datetime import date
 from django.conf import settings
 from core_api.models import Business
 from core_api.models import ReceiptRequest
@@ -55,59 +56,67 @@ def cart(request):
         return response
 
     return render(request, 'home.html')
-@login_required(login_url='signup')
+@login_required(login_url='frontend:signup')
 def dashboard(request, pk):
+    
     user = User.objects.get(id=pk)
-    biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
-    
+    if request.user == user:
+        biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
+        
 
-    users_in_group = Group.objects.get(name="Business").user_set.all()
-    if user not in users_in_group :
-        seller_biz = Seller.objects.create(
-            user = user,
-            biz_code = biz_token
-        )
-        seller_biz.save()
-        user_group = Group.objects.get(name="Business")
-        user.groups.add(user_group)
-    
-        # biz = Business.objects.create(
-        #     name = request.POST['biz_name'],
-        #     website = request.POST['web_url'],
-        #     biz_code = biz_token+str(user.pk),
-        #     text = request.POST['additional_text'],
-        #     template = request.POST['template_choice'],
-        #     user_no = user.pk
-        # )
-        # biz.save()
-    biz = Seller.objects.get(user=user)
-    total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
-    specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
+        users_in_group = Group.objects.get(name="Business").user_set.all()
+        if user not in users_in_group :
+            seller_biz = Seller.objects.create(
+                user = user,
+                biz_code = biz_token
+            )
+            seller_biz.save()
+            user_group = Group.objects.get(name="Business")
+            user.groups.add(user_group)
+        
+            # biz = Business.objects.create(
+            #     name = request.POST['biz_name'],
+            #     website = request.POST['web_url'],
+            #     biz_code = biz_token+str(user.pk),
+            #     text = request.POST['additional_text'],
+            #     template = request.POST['template_choice'],
+            #     user_no = user.pk
+            # )
+            # biz.save()
+        biz = Seller.objects.get(user=user)
+        total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
+        specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
 
-    # Get the current date
-    current_date = datetime.now()
-    
-    # Calculate the difference in days
-    days_difference = (specific_date - current_date).days
+        # Get the current date
+        current_date = datetime.now()
+        
+        # Calculate the difference in days
+        days_difference = (specific_date - current_date).days
 
-    group_names = ['Lev 1', 'Group 2', 'Group 3']
-    user_plan_and_text = {'Level 1':'You are on basic plan, your plan expires on 20th June, 2023', 'Level 2':'You are on medium plan, your plan expires on 20th June, 2023', 'Level 3':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
-    subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
-    users_in_group = Group.objects.get(name="Business").user_set.all()
-    users_in_group3 = Group.objects.get(name="Level 3").user_set.all()
-    users_in_group2 = Group.objects.get(name="Level 2").user_set.all()
-    if user in users_in_group:
-        subscription_text = user_plan_and_text['Level 1']
-    
-    elif user in users_in_group2:
-        subscription_text = user_plan_and_text['Level 2']
-    
-    elif user in users_in_group3:
-        subscription_text = user_plan_and_text['Level 3']
+        group_names = ['Lev 1', 'Group 2', 'Group 3']
+        user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Level 1':'You are on basic plan, your plan expires on 20th June, 2023', 'Level 2':'You are on medium plan, your plan expires on 20th June, 2023', 'Level 3':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
+        subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
+        users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
+        users_in_group = Group.objects.get(name="Business").user_set.all()
+        users_in_group3 = Group.objects.get(name="Level 3").user_set.all()
+        users_in_group2 = Group.objects.get(name="Level 2").user_set.all()
+        if user in users_in_freegroup:
+            subscription_text = user_plan_and_text['Free']
+        
+        elif user in users_in_group:
+            subscription_text = user_plan_and_text['Level 1']
+
+        elif user in users_in_group2:
+            subscription_text = user_plan_and_text['Level 2']
+        
+        elif user in users_in_group3:
+            subscription_text = user_plan_and_text['Level 3']
 
 
-    context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 'days_difference':days_difference}
-    return render(request, 'dashboard.html', context)
+        context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 'days_difference':days_difference}
+        return render(request, 'dashboard.html', context)
+    else:
+        return redirect('frontend:home')
 
 def payment(request, pk):
     user = User.objects.get(id=pk)
@@ -271,12 +280,13 @@ def registerBusiness(request):
         
         # return HttpResponse(Response)
 
-@login_required(login_url='login')
+@login_required(login_url='frontend:signup')
 def payment(request, pk):
     user = User.objects.get(id=pk)
     base_5 = 'Level 1'
     base_10 = 'Level 2'
     base_25 = 'Level 2'
+    current_date = date.today()
 
     if request.method == 'POST':
         if request.POST['template_choice'] == '5':
@@ -291,6 +301,14 @@ def payment(request, pk):
             user_group = Group.objects.get(name=base_25)
             user.groups.add(user_group)
         # return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
+        payment_log = PaymentLogs.objects.create(
+            payer = user,
+            amount = request.POST['template_choice'],
+            transaction_id = request.POST['template_choice'],
+            status = request.POST['template_choice'],
+            expiration_date = current_date + timedelta(days=30),
+        )
+        payment_log.save()
 
     context = {'user':user}
     return render(request, 'pay.html', context)

@@ -139,9 +139,9 @@
                                                   <label class="input-group-text" required for="inputGroupSelect02">Choose plan</label>
                                                     <select class="custom-select" name="template_choice" id="inputGroupSelect02" required>
                                                       
-                                                      <option value="5">Small</option>
-                                                      <option value="10" selected="selected" >Medium</option>
-                                                      <option value="25">Large</option>
+                                                      <option value="5">Small - $5 per month, 75 receipts</option>
+                                                      <option value="10" selected="selected" >Medium - $10 per month, 200 receipts</option>
+                                                      <option value="25">Large - $25 per month, 500 receipts</option>
                                                     </select>
                                                     
                                                   </div>
@@ -214,7 +214,38 @@
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <!-- <button id="button1" onclick="switchContent(1)">JavaScript</button>
                         <button id="button2" onclick="switchContent(2)">Python</button> -->
-                        <span class=""><a class="btn btn-outline-success" href="{% url 'frontend:payment' user.id %}">Upgrade to Basic</a></span>
+                        <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#cartItemmodal">CartItem Snippet</a></span>
+                        <div id="cartItemmodal" class="modal fade" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="row">
+                                    
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                       <!-- end of col -->
+                                      <div class="col-lg-12">
+                                        <blockquote class="blockquote mb-0">
+                                          <p><div class="code-block" id="my-container" style="background-color: #2F7CB1;">
+                                            <pre>
+                                              <code style="color: antiquewhite; ">
+                                               
+                                                const cartItems = [
+                                                  { name: "Item 1", quantity: 2, price: 10 },
+                                                  { name: "Item 2", quantity: 1, price: 5 },
+                                                  { name: "Item 3", quantity: 3, price: 15 },
+                                                ];
+
+                                                
+                                              </code>
+                                            </pre>
+                                          </div>
+                                          </p>
+                                          
+                                        </blockquote>
+                                      </div> <!-- end of col -->
+                                  </div> <!-- end of row -->
+                              </div> <!-- end of modal-content -->
+                          </div> <!-- end of modal-dialog -->
+                      </div>
                         <button onclick="copyCode()" class="btn btn-success"><i class="far fa-copy"></i></button>
                     </li>
                         
