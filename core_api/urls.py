@@ -1,14 +1,19 @@
 from django.contrib import admin
 from django.urls import path
+from .views import CreatePDF
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 from django.views.decorators.csrf import csrf_exempt
 # from .views import makeReceipt, createBusiness, createReceipt
 
 urlpatterns = [
-    # path("pdf", makeReceipt.as_view(), name="makeReceipt"),
-    # path('createBiz/<str:name>/<str:website>/<str:biz_code>/', createBusiness.as_view(), name='createBiz'),
-    # path("getpdf/<str:code>/<str:name>/<str:product>/<str:price>/", createReceipt.as_view(), name="createReceipt"),
-    # path('cart/', views.cart, name='cart'),
+    
     
     path('create_receipt/', csrf_exempt(views.download_pdf), name='download'),
+    path('create_pdf/', CreatePDF.as_view(), name='create_pdf'),
 ]
+
+if settings.DEBUG:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

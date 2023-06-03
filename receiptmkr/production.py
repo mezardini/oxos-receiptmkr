@@ -47,7 +47,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SITE_ID = 1
+# SITE_ID = 1
 
-LOGIN_REDIRECT_URL = 'https://mezzala.onrender.com/'
-LOGOUT_REDIRECT_URL = 'https://mezzala.onrender.com/'
+# LOGIN_REDIRECT_URL = 'https://mezzala.onrender.com/'
+# LOGOUT_REDIRECT_URL = 'https://mezzala.onrender.com/'

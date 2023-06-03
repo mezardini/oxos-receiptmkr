@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "frontend"
 
@@ -16,5 +18,9 @@ urlpatterns = [
     path('payment/<int:pk>/', views.payment, name="payment"),
     path('payment/<int:pk>/', views.payment, name="payment"),
     path('create_biz/', views.registerBusiness, name='regBiz'),
-    path('cart/', views.cart, name='cart'),
+    
 ]
+
+if settings.DEBUG == False:
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

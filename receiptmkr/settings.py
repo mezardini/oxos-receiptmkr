@@ -29,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'rest_framework',
     'core_api',
     'frontend',
     'django.contrib.sites',
@@ -54,6 +54,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'corsheaders',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,6 +154,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR, 'static'
 ]
+MEDIA_ROOT = os.path.join(BASE_DIR,"media")
+MEDIA_URL = "/media/"
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5500',
@@ -154,7 +163,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5500',
 ]
 CORS_ALLOWED_ORIGINS = ['*',]
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://127.0.0.1:5500',]
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://*.127.0.0.1', 'http://127.0.0.1:5500',]
 CORS_ORIGIN_ALLOW_ALL = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

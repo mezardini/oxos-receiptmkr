@@ -33,29 +33,11 @@ def documentation(request):
 
     return render(request, 'api-doc.html')
 
-def cart(request):
-    # name = str(request.POST.get('name'))
-    # product = str(request.POST.get('product'))
-    # price = str(request.POST.get('price'))
-    # biz_code = str(request.POST.get('biz_id'))
-        
-    # Response = requests.post('http://127.0.0.1:8000/api/getpdf/'+biz_code+'/'+name+'/'+product+'/'+price+'/').content
-    # return HttpResponse(Response,content_type='application/pdf')
-    if request.method == 'POST':
-        name = str(request.POST.get('name'))
-        product = str(request.POST.get('product'))
-        price = str(request.POST.get('price'))
-        biz_code = str(request.POST.get('biz_id'))
-
-        response = requests.post('http://127.0.0.1:8000/api/getpdf/'+biz_code+'/'+name+'/'+product+'/'+price+'/').content
-        # response['Content-Disposition'] = 'attachment; file=response'
-        
-        response =  HttpResponse(response,content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
-
-        return response
-
-    return render(request, 'home.html')
+def error_404_view(request, exception):
+   
+    # we add the path to the 404.html file
+    # here. The name of our HTML file is 404.html
+    return render(request, '404.html')
 @login_required(login_url='frontend:signup')
 def dashboard(request, pk):
     
@@ -92,45 +74,42 @@ def dashboard(request, pk):
         
         # Calculate the difference in days
         days_difference = (specific_date - current_date).days
+        receipts_allocated = biz.receipt_allocation
 
         group_names = ['Lev 1', 'Group 2', 'Group 3']
-        user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Level 1':'You are on basic plan, your plan expires on 20th June, 2023', 'Level 2':'You are on medium plan, your plan expires on 20th June, 2023', 'Level 3':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
+        user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Basic':'You are on basic plan, your plan expires on 20th June, 2023', 'Medium':'You are on medium plan, your plan expires on 20th June, 2023', 'Large':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
         subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
         users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
         users_in_group = Group.objects.get(name="Business").user_set.all()
-        users_in_group3 = Group.objects.get(name="Level 3").user_set.all()
-        users_in_group2 = Group.objects.get(name="Level 2").user_set.all()
+        users_in_group3 = Group.objects.get(name="Large").user_set.all()
+        users_in_group2 = Group.objects.get(name="Medium").user_set.all()
         if user in users_in_freegroup:
             subscription_text = user_plan_and_text['Free']
-        
+            
         elif user in users_in_group:
-            subscription_text = user_plan_and_text['Level 1']
+            subscription_text = user_plan_and_text['Basic']
+            
 
         elif user in users_in_group2:
-            subscription_text = user_plan_and_text['Level 2']
+            subscription_text = user_plan_and_text['Medium']
+            
         
         elif user in users_in_group3:
-            subscription_text = user_plan_and_text['Level 3']
+            subscription_text = user_plan_and_text['Large']
+            
 
+        bar_width_1 = 5 #the value should be 0(zero) but i don't want the progress bar blank
+        if total_receipts > 0:
+            bar_width_1 = (total_receipts/(total_receipts+receipts_allocated))*100
+        bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
 
-        context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 'days_difference':days_difference}
+        context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 
+                   'days_difference':days_difference, 'receipts_allocated':receipts_allocated, 'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2  }
         return render(request, 'dashboard.html', context)
     else:
         return redirect('frontend:home')
 
-def payment(request, pk):
-    user = User.objects.get(id=pk)
-    if request.method == 'POST':
-        if request.POST.get('price') == '5':
-            user_group = Group.objects.get(name="Level 1")
-            user.groups.add(user_group)
-        elif request.POST.get('price')  == '10':
-            user_group = Group.objects.get(name="Level 2")
-            user.groups.add(user_group)
-        elif request.POST.get('price')  == '20':
-            user_group = Group.objects.get(name="Level 3")
-            user.groups.add(user_group)
-    return render(request, 'payment.html')
+
 
 def login(request):
     if request.method == 'POST':
@@ -283,21 +262,25 @@ def registerBusiness(request):
 @login_required(login_url='frontend:signup')
 def payment(request, pk):
     user = User.objects.get(id=pk)
-    base_5 = 'Level 1'
-    base_10 = 'Level 2'
-    base_25 = 'Level 2'
+    base_5 = 'Basic'
+    base_10 = 'Medium'
+    base_25 = 'Large'
     current_date = date.today()
+    allocation = 20
 
     if request.method == 'POST':
         if request.POST['template_choice'] == '5':
+            allocation = 50
             user_group = Group.objects.get(name=base_5)
             user.groups.add(user_group)
             return redirect('https://business.quickteller.com/link/pay/oxos')
         elif request.POST['template_choice'] == '10':
+            allocation = 200
             user_group = Group.objects.get(name=base_10)
             user.groups.add(user_group)
             return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
         elif request.POST['template_choice'] == '25':
+            allocation = 500
             user_group = Group.objects.get(name=base_25)
             user.groups.add(user_group)
         # return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
@@ -308,7 +291,28 @@ def payment(request, pk):
             status = request.POST['template_choice'],
             expiration_date = current_date + timedelta(days=30),
         )
+        seller = Seller.objects.get(user=user)
+        current_allocation = seller.receipt_allocation
+        total_allocation = int(allocation) + int(current_allocation)
+        seller.update(receipt_allocation = total_allocation)
         payment_log.save()
 
     context = {'user':user}
     return render(request, 'pay.html', context)
+
+
+
+# def paymentLog(request):
+#     current_date = date.today()
+#     payment_log = PaymentLogs.objects.create(
+#             payer = user,
+#             amount = request.POST['template_choice'],
+#             transaction_id = request.POST['template_choice'],
+#             status = request.POST['template_choice'],
+#             expiration_date = current_date + timedelta(days=30),
+#     )
+#     seller = Seller.objects.get(user=user)
+#     current_allocation = seller.receipt_allocation
+#     total_allocation = int(allocation) + int(current_allocation)
+#     seller.update(receipt_allocation = total_allocation)
+#     payment_log.save()

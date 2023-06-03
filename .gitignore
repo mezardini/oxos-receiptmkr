@@ -6,3 +6,6 @@ db.sqlite3
 /static  
 .DS_Store
 /receiptmkr.env
+fly.toml
+procfile
+Dockerfile
