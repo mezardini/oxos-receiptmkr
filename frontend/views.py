@@ -76,7 +76,7 @@ def dashboard(request, pk):
         days_difference = (specific_date - current_date).days
         receipts_allocated = biz.receipt_allocation
 
-        group_names = ['Lev 1', 'Group 2', 'Group 3']
+        
         user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Basic':'You are on basic plan, your plan expires on 20th June, 2023', 'Medium':'You are on medium plan, your plan expires on 20th June, 2023', 'Large':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
         subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
         users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
@@ -111,20 +111,6 @@ def dashboard(request, pk):
 
 
 
-def login(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST['password']
-
-        user = auth.authenticate(request, username=email, password=password)
-
-        if user is not None:
-            auth.login(request, user)
-            return redirect('dashboard', pk=user.id)
-        else:
-            return render(request, 'log-in.html')
-    context = {}
-    return render(request, 'log-in.html', context)
 
 def signup(request):
     global user
@@ -200,64 +186,13 @@ def signup(request):
     
         return render(request, 'sign-up.html')
 
-def verifymail(request):
 
-    if request.method == 'POST':
-        
-        entetoken = request.POST.get('token')
-        entered_token = str(entetoken)
-
-        if entered_token == token:
-            messages.error(request, "Email validated, you can now signin.")
-            user.is_active = True
-            user.save()
-            return redirect('signin')
-
-        else:
-            messages.error(request, "Token incorrect.")
-            user.is_active = False
-            user.save()
-            return redirect('signup')
-
-
-    return render(request, 'verifymail.html')
 
 def signout(request):
     logout(request)
     return redirect('frontend:signup') 
 
-def registerBusiness(request):
-        user = request.user
-        users_in_group = Group.objects.get(name="Business").user_set.all()
-        if user in users_in_group :
-            return redirect ('frontend:dashboard', user.id)
-        else:
-            biz_name = str(request.POST.get('name'))
-            biz_website = str(request.POST.get('web_url'))
-            biz_code = str(random.randint(1000,123999999))
 
-            Response = requests.post('http://127.0.0.1:8000/api/createBiz/'+biz_name+'/'+biz_website+'/'+biz_code+'/')
-            if request.method == 'POST':
-                biz = Seller.objects.create(
-                    biz_name = request.POST['name'],
-                    biz_code = biz_code,
-                    web_url = request.POST['web_url'],
-                    user = User.objects.get(id=1)
-                )
-                biz.save()
-                user_group = Group.objects.get(name="Business")
-                user.groups.add(user_group)
-                return redirect('/')
-            return render(request, 'createbiz.html')
-        # Output = response
-        # data = json.loads(response.content)
-
-        # url = 'https://127.0.0.1:8000/verify'   
-        # page = requests.get(url, verify=False)
-
-        # x = data.get("data").get("account_name")
-        
-        # return HttpResponse(Response)
 
 @login_required(login_url='frontend:signup')
 def payment(request, pk):
