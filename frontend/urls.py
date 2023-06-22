@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from .views import Dashboard
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -12,8 +13,8 @@ urlpatterns = [
     path('documentation/', views.documentation, name='documentation'),
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
-    path('dashboard/<int:pk>/', views.dashboard, name="dashboard"),
-    path('payment/<int:pk>/', views.payment, name="payment"),
+    path('dashboard/<int:pk>/', Dashboard.as_view(), name="dashboard"),
+    
 
     
 ]

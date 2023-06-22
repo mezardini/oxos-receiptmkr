@@ -27,6 +27,9 @@ from django.template import loader, Template
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.contrib.auth.models import User, auth, Group
+from io import BytesIO
+from django.template.loader import get_template
+from xhtml2pdf import pisa  
 
 
 
@@ -111,7 +114,7 @@ def download_pdf(request):
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 'business_url':business_url}
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
-            template = template_env.get_template('pdftemplates/pdf4.html')
+            template = template_env.get_template('pdftemplates/newreceipt.html')
             output_text = template.render(context)
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
@@ -119,8 +122,6 @@ def download_pdf(request):
             pdfkit.from_string(output_text, 'pdfprint/'+filename, configuration=config, options={"enable-local-file-access": ""})
             file_path = 'pdfprint/'+filename
             FilePointer = open(file_path,"rb")
-            response = HttpResponse(FilePointer,content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
             serializer_class = ReceiptRequestSerializer
             data = {'receipt_name':name, 'user_no':token }
             serializer = ReceiptRequestSerializer(data=data)
@@ -130,7 +131,8 @@ def download_pdf(request):
                     'Here', 'Here is the message.', 'settings.EMAIL_HOST_USER', ['mezardini@gmail.com'])
             email.attach_file('pdfprint/'+name+'.pdf')
             email.send()
-
+            response = HttpResponse(FilePointer,content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
             return response
         
             
@@ -215,9 +217,9 @@ class CreatePDF(APIView):
         json_data = json.loads(request.body.decode('utf-8'))
         name = json_data.get('name', '')
         token = json_data.get('token', '')
-        business_name = json_data.get('website', '')
+        business_name = json_data.get('name', '')
         customer_email = json_data.get('customer', '')
-        business_url = json_data.get('customer', '')
+        business_url = json_data.get('website', '')
         user_no = token[-1]
         biz = Seller.objects.get(biz_code=token)
         seller = Seller.objects.get(user=user_no)
@@ -261,7 +263,7 @@ class CreatePDF(APIView):
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 'business_url':business_url}
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
-            template = template_env.get_template('pdftemplates/pdf4.html')
+            template = template_env.get_template('pdftemplates/newreceipt.html')
             output_text = template.render(context)
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
@@ -276,13 +278,12 @@ class CreatePDF(APIView):
             serializer = ReceiptRequestSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-            biz.receipt_allocation -= 1
-            biz.save() 
-            # email = EmailMessage(
-            #         'Here', 'Here is the message.', 'settings.EMAIL_HOST_USER', ['mezardini@gmail.com'])
-            # email.attach_file('pdfprint/'+name+'.pdf')
-            # email.send()
-            # seller.update(receipt_allocation=F('receipt_allocation') -1 )
+            
+            email = EmailMessage(
+                    'Purchase receipt', 'Here is your receipt.', 'ajisolaolaoluwa@gmail.com', ['mezardini@gmail.com'])
+            email.attach_file('pdfprint/'+name+'.pdf')
+            email.send()
+            seller.update(receipt_allocation=F('receipt_allocation') -1 )
             
             return response
         
