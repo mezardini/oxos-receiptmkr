@@ -14,7 +14,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
     path('dashboard/<int:pk>/', Dashboard.as_view(), name="dashboard"),
-    
+    path('payment/<int:pk>/<str:transaction_id>/<str:status>/<int:amount>/', views.paymentLog, name='paymentlog'),
 
     
 ]

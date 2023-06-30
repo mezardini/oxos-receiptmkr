@@ -124,7 +124,7 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       <h5>Receipts</h5>
                       <!-- <span class="">Plan ends on <h6>June 20, 2023</h6></span> -->
-                      <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Buy tickets </a></span>
+                      <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Buy receipts</a></span>
                       <div id="staticBackdrop" class="modal fade" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -140,9 +140,9 @@
                                                   <label class="input-group-text" required for="inputGroupSelect02">Choose plan</label>
                                                     <select class="custom-select" name="template_choice" id="inputGroupSelect02" required>
                                                       
-                                                      <option value="5">Small - $5 per month, 75 receipts</option>
-                                                      <option value="10" selected="selected" >Medium - $10 per month, 200 receipts</option>
-                                                      <option value="25">Large - $25 per month, 500 receipts</option>
+                                                      <option value="5">Mini - $5, 75 receipts</option>
+                                                      <option value="10" selected="selected" >Midi - $10, 200 receipts</option>
+                                                      <option value="25">Maxi - $25, 500 receipts</option>
                                                     </select>
                                                     
                                                   </div>
@@ -216,7 +216,7 @@
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                         <!-- <button id="button1" onclick="switchContent(1)">JavaScript</button>
                         <button id="button2" onclick="switchContent(2)">Python</button> -->
-                        <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#cartItemmodal">CartItem Snippet</a></span>
+                        <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#cartItemmodal">Receipt template</a></span>
                         <div id="cartItemmodal" class="modal fade" tabindex="-1" aria-hidden="true">
                           <div class="modal-dialog">
                               <div class="modal-content">
@@ -226,22 +226,9 @@
                                        <!-- end of col -->
                                       <div class="col-lg-12">
                                         <blockquote class="blockquote mb-0">
-                                          <p><div class="code-block" id="my-container" style="background-color: #2F7CB1;">
-                                            <pre>
-                                              <code style="color: antiquewhite; ">
-                                               
-                                                const cartItems = [
-                                                  { name: "Item 1", quantity: 2, price: 10 },
-                                                  { name: "Item 2", quantity: 1, price: 5 },
-                                                  { name: "Item 3", quantity: 3, price: 15 },
-                                                ];
-
-                                                
-                                              </code>
-                                            </pre>
+                                            <div class="text-center">
+                                            <img src="{% static 'images/receipt_template.png' %}" alt="Receipt template">
                                           </div>
-                                          </p>
-                                          
                                         </blockquote>
                                       </div> <!-- end of col -->
                                   </div> <!-- end of row -->
@@ -257,12 +244,12 @@
                         <p><div class="code-block" id="my-container" style="background-color: #2F7CB1;">
                           <pre>
                             <code class="codeCopy" style="color: antiquewhite; ">
-                              <!-- // Create an array of cart items
+                              // Create an array of cart items
                               const cartItems = [
                                 { quantity: 3, itemName: 'Example Item 1', itemPrice: 19.99, totalPrice: 59.97 },
                                 { quantity: 2, itemName: 'Example Item 2', itemPrice: 29.99, totalPrice: 59.98 }
                               ];
-                               -->
+                              
                               var business_name = 'Name you want on the receipt; examplestores';
                               var user_token = 'Your User Token';
                               var business_url = 'Your store url; examplestores.com';

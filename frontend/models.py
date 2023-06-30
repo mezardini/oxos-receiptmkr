@@ -23,8 +23,8 @@ class PaymentLogs(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     amount = models.IntegerField()
     transaction_id = models.CharField(max_length=100)
-    status = models.CharField(max_length=20, choices=Transaction_status)
-    expiration_date = models.DateField(default='2023-12-18')
+    status = models.CharField(max_length=20)
+    pay_date = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.payer.username} - {self.amount}"

@@ -24,6 +24,7 @@
         
         <!-- Styles -->
         <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"> 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
         <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -47,7 +48,7 @@
                 <!-- <a class="navbar-brand logo-text" href="{% url 'frontend:home' %}">Oxos</a> -->
 
                 <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation" aria-expanded="false">
-                    <span class=""><a class="btn-outline-sm" href="{% url 'frontend:signup' %}">Log in</a></span>
+                    <span class=""><a class="btn-outline-sm" href="{% provider_login_url 'google' %}"><img src="{% static 'images/googlex.svg' %}">Sign In </a></span>
                 </button>
 
                 <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
@@ -75,7 +76,7 @@
                         {% if request.user.is_authenticated %}
                         <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id %}">Dashboard</a>
                         {% else %}
-                        <a class="btn-outline-sm" href="{% url 'frontend:signup' %}">Sign In</a>
+                        <a class="btn-outline-sm" href="{% provider_login_url 'google' %}"><img src="{% static 'images/googlex.svg' %}">Sign In with google</a>
                         {% endif %}
                     </span>
                 </div> <!-- end of navbar-collapse -->
@@ -93,9 +94,9 @@
                             <h1 class="h1-large" style="color: #000000;">Generate <span class="replace-me">receipts</span> for your customers on the fly </h1>
                             <p class="p-large">Elevate your customer experience with beautifully designed receipts</p>
                             
-                            <a class="btn-solid-lg" href="{% url 'frontend:signup' %}">Get started for free</a>
+                            <a class="btn-solid-lg" href="{% provider_login_url 'google' %}">Get started for free</a>
 
-                            <p class="p-large">* Billing is fairly priced and based on usage</p>
+                            <!-- <p class="p-large">* Billing is fairly priced and based on usage</p> -->
                             
                         </div> <!-- end of text-container -->
                     </div> <!-- end of col -->
@@ -167,25 +168,24 @@
 
 
         <!-- Details 1 -->
-        <div id="details" class="basic-1 bg-gray">
+        <!-- <div id="details" class="basic-1 bg-gray">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-xl-5">
                         <div class="text-container">
                             <h2>Customize the receipt with your business details</h2>
                             <p>Business details like name, website address, logo, physical address are all included in the receipt to increase personalization</p>
-                            <!-- <a class="btn-solid-reg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Go to Dashboard</a> -->
-                        </div> <!-- end of text-container -->
-                    </div> <!-- end of col -->
+                            </div> 
+                    </div> 
                     <div class="col-lg-6 col-xl-7">
                         <div class="image-container">
                             <img class="img-fluid" src="{% static 'images/Advanced customization-rafiki.svg' %}" alt="alternative">
-                        </div> <!-- end of image-container -->
-                    </div> <!-- end of col -->
-                </div> <!-- end of row -->
-            </div> <!-- end of container -->
-        </div> <!-- end of basic-1 -->
-        <!-- end of details 1 -->
+                        </div> 
+                    </div> 
+                </div>
+            </div> 
+        </div>  -->
+     
 
         
 

@@ -22,7 +22,6 @@ from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.http import HttpResponse
 from django.template import loader, Template
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage

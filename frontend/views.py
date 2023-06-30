@@ -205,18 +205,7 @@ class Dashboard(LoginRequiredMixin, View):
             elif request.POST['template_choice'] == '25':
                 allocation = 500
             # return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
-            payment_log = PaymentLogs.objects.create(
-                payer = user,
-                amount = request.POST['template_choice'],
-                transaction_id = request.POST['template_choice'],
-                status = request.POST['template_choice'],
-                expiration_date = current_date + timedelta(days=30),
-            )
-            seller = Seller.objects.get(user=user)
-            current_allocation = seller.receipt_allocation
-            total_allocation = int(allocation) + int(current_allocation)
-            seller.update(receipt_allocation = total_allocation)
-            payment_log.save()
+            
         
 
 
@@ -302,54 +291,29 @@ def signout(request):
 
 
 
-# @login_required(login_url='frontend:signup')
-# def payment(request, pk):
-#     user = User.objects.get(id=pk)
-#     base_5 = 'Basic'
-#     base_10 = 'Medium'
-#     base_25 = 'Large'
-#     current_date = date.today()
-#     allocation = 20
 
-#     if request.method == 'POST':
-#         if request.POST['template_choice'] == '5':
-#             allocation = 50
-#             return redirect('https://business.quickteller.com/link/pay/oxos')
-#         elif request.POST['template_choice'] == '10':
-#             allocation = 200
-#             return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
-#         elif request.POST['template_choice'] == '25':
-#             allocation = 500
-#         # return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
-#         payment_log = PaymentLogs.objects.create(
-#             payer = user,
-#             amount = request.POST['template_choice'],
-#             transaction_id = request.POST['template_choice'],
-#             status = request.POST['template_choice'],
-#             expiration_date = current_date + timedelta(days=30),
-#         )
-#         seller = Seller.objects.get(user=user)
-#         current_allocation = seller.receipt_allocation
-#         total_allocation = int(allocation) + int(current_allocation)
-#         seller.update(receipt_allocation = total_allocation)
-#         payment_log.save()
+def paymentLog(request, pk, transaction_id, status, amount ):
+    user = User.objects.get(id=pk)
+    current_date = date.today()
+    allocation = 0
+    if amount == 5:
+        allocation = 50
+    elif amount == 10:
+        allocation = 100
+    elif amount == 25:
+        allocation = 200
+    payment_log = PaymentLogs.objects.create(
+            payer = user,
+            amount = amount,
+            transaction_id = transaction_id,
+            status = status,
+    )
+    seller = Seller.objects.get(user=user)
+    current_allocation = seller.receipt_allocation
+    total_allocation = int(allocation) + int(current_allocation)
+    seller = Seller.objects.filter(user=user).update(receipt_allocation = total_allocation)
+    # seller.save()
+    # seller.update(receipt_allocation = total_allocation)
+    payment_log.save()
 
-#     context = {'user':user}
-#     return render(request, 'pay.html', context)
-
-
-
-# def paymentLog(request):
-#     current_date = date.today()
-#     payment_log = PaymentLogs.objects.create(
-#             payer = user,
-#             amount = request.POST['template_choice'],
-#             transaction_id = request.POST['template_choice'],
-#             status = request.POST['template_choice'],
-#             expiration_date = current_date + timedelta(days=30),
-#     )
-#     seller = Seller.objects.get(user=user)
-#     current_allocation = seller.receipt_allocation
-#     total_allocation = int(allocation) + int(current_allocation)
-#     seller.update(receipt_allocation = total_allocation)
-#     payment_log.save()
+    return redirect ('frontend:dashboard', user.id)
