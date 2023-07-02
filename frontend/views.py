@@ -193,17 +193,17 @@ class Dashboard(LoginRequiredMixin, View):
         base_10 = 'Medium'
         base_25 = 'Large'
         current_date = date.today()
-        allocation = 20
+        allocation = 50
 
         if request.method == 'POST':
-            if request.POST['template_choice'] == '5':
-                allocation = 50
+            if request.POST['template_choice'] == 'silver':
+                allocation = 150
                 return redirect('https://business.quickteller.com/link/pay/oxos')
-            elif request.POST['template_choice'] == '10':
-                allocation = 200
-                return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
-            elif request.POST['template_choice'] == '25':
+            elif request.POST['template_choice'] == 'gold':
                 allocation = 500
+                return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
+            elif request.POST['template_choice'] == 'platinum':
+                allocation = 1500
             # return redirect('https://business.quickteller.com/link/pay/tixvanaUKxsv')
             
         
@@ -296,12 +296,12 @@ def paymentLog(request, pk, transaction_id, status, amount ):
     user = User.objects.get(id=pk)
     current_date = date.today()
     allocation = 0
-    if amount == 5:
-        allocation = 50
-    elif amount == 10:
-        allocation = 100
-    elif amount == 25:
-        allocation = 200
+    if amount == 20:
+        allocation = 150
+    elif amount == 50:
+        allocation = 500
+    elif amount == 100:
+        allocation = 1500
     payment_log = PaymentLogs.objects.create(
             payer = user,
             amount = amount,

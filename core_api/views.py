@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework.response import Response
@@ -222,6 +222,7 @@ class CreatePDF(APIView):
         user_no = token[-1]
         biz = Seller.objects.get(biz_code=token)
         seller = Seller.objects.get(user=user_no)
+        seller_mail = seller.user.email
         allocation_quota = seller.receipt_allocation
         # biz_name = biz.name
         if allocation_quota > 0:
@@ -270,7 +271,7 @@ class CreatePDF(APIView):
             pdfkit.from_string(output_text, 'pdfprint/'+filename, configuration=config, options={"enable-local-file-access": ""})
             file_path = 'pdfprint/'+filename
             FilePointer = open(file_path,"rb")
-            response = HttpResponse(FilePointer,content_type='application/pdf')
+            response = FileResponse(FilePointer)
             response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
             serializer_class = ReceiptRequestSerializer
             data = {'receipt_name':name, 'user_no':token }
@@ -278,13 +279,13 @@ class CreatePDF(APIView):
             if serializer.is_valid():
                 serializer.save()
             
-            email = EmailMessage(
-                    'Purchase receipt', 'Here is your receipt.', 'ajisolaolaoluwa@gmail.com', ['mezardini@gmail.com'])
-            email.attach_file('pdfprint/'+name+'.pdf')
-            email.send()
-            seller.update(receipt_allocation=F('receipt_allocation') -1 )
+            # email = EmailMessage(
+            #         'Purchase receipt', 'Here is your receipt.', 'settings.EMAIL_HOST_USER', [seller_mail])
+            # email.attach_file('pdfprint/'+name+'.pdf')
+            # email.send()
+            seller = Seller.objects.filter(user=user_no).update(receipt_allocation=F('receipt_allocation') -1)
             
-            return response
+            return HttpResponse(response, content_type='application/pdf')
         
             
         else:
@@ -358,5 +359,10 @@ class CreatePDF(APIView):
             mail.content_subtype = 'html'
             mail.send()
             return HttpResponse('Quota exceeded')
+
+
+def sendReceipt(response, name):
+    response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
+    return response
 
         
