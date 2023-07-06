@@ -60,7 +60,7 @@
                     </li>
                         <li class="nav-item">
                           {% if request.user.is_authenticated %}
-                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id %}">Dashboard</a>
+                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
                         {% else %}
                         <a class="btn-outline-sm" href="{% url 'frontend:signup' %}">Sign In</a>
                         {% endif %}

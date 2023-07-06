@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 {% load static %}
 {% load socialaccount %}
@@ -62,8 +64,8 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#details">Details</a>
                         </li>
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Pricing</a>
+                        <li class="nav-item dropdown">
+                            <!-- <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Pricing</a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown01">
                                 <div class="card text-center">
                                     <!-- <div class="card-header">
@@ -77,8 +79,43 @@
                                     </div>
                                     
                                   </div>
-                            </ul>
-                        </li> --> 
+                            </ul> -->
+                            <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Pricing
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <table class="table table-bordered">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Silver</th>
+                                        <th scope="col">Gold</th>
+                                        <th scope="col">Platinum</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <th scope="row">Receipt Quotas</th>
+                                        <td>200</td>
+                                        <td>1000</td>
+                                        <td>Unlimited</td>
+                                      </tr>
+                                      <tr>
+                                        <th scope="row">Customer Support</th>
+                                        <td><span class="general_check">✓</span></td>
+                                        <td><span class="general_check">✓</span></td>
+                                        <td><span class="general_check">✓</span></td>
+                                      </tr>
+                                      <tr>
+                                        <th scope="row">Price</th>
+                                        <td> <span class="btn-solid-lg">$20</span></td>
+                                        <td><span class="btn-solid-lg">$50</span></td>
+                                        <td><span class="btn-solid-lg">$100</span></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                              </div>
+                        </li> 
                         <li class="nav-item">
                             <a class="nav-link" href="#contactus">Contact Us</a>
                         </li>
@@ -88,10 +125,11 @@
                     </ul>
                     <span class="nav-item">
                         {% if request.user.is_authenticated %}
-                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id %}">Dashboard</a>
+                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
                         {% else %}
-                        <a class="btn-outline-sm" href="{% provider_login_url 'google' %}">Sign In with google</a>
+                        <a class="btn-outline-sm"  href="{% provider_login_url 'google' %}">Sign In with google</a>
                         {% endif %}
+                        
                     </span>
                 </div> <!-- end of navbar-collapse -->
             </div> <!-- end of container -->
@@ -108,7 +146,7 @@
                             <h1 class="h1-large" style="color: #000000;">Generate <span class="replace-me">receipts</span> for your customers on the fly </h1>
                             <p class="p-large">Elevate your customer experience with beautifully designed receipts</p>
                             {% if request.user.is_authenticated %}
-                            <a class="btn-solid-lg" href="{% url 'frontend:dashboard' user.id %}">Dashboard</a>
+                            <a class="btn-solid-lg" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
                             {% else %}
                             <a class="btn-solid-lg" href="{% provider_login_url 'google' %}">Get started for free</a>
                             <p class="p-large">* Free Trial, No Credit Card Required</p>
@@ -169,7 +207,7 @@
                                 <img src="{% static 'images/Honesty-rafiki.svg' %}" alt="">
                             </div>
                             <div class="card-body">
-                                <h4 class="card-title">Satisfy your customers</h4>
+                                <h4 class="card-title">Receipts download </h4>
                                 <p>The receipts are generated after payment has been confirmed successful</p>
                             </div>
                         </div>
@@ -184,27 +222,105 @@
 
 
         <!-- Details 1 -->
+        
         <div id="features" class="cards-1">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6 col-xl-5">
+                    <!-- <div class="col-lg-6 col-xl-5">
                         <div class="text-container">
                             <h2>Easy Integration, just copy and paste</h2>
+                            <br>
+                            <br>
                             <p>All that is needed to start using oxos is just a simple copy and paste into your code repo</p>
                             </div> 
-                    </div> 
-                    <div class="col-lg-6 col-xl-7">
+                    </div>  -->
+                    
+                    <!-- <div class="col-lg-6 col-xl-7 ">
                         <div class="text-container">
                             <h2 class="text-center">Pricing</h2>
-                            <p>All that is needed to start using oxos is just a simple copy and paste into your code repo</p>
+                            <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Silver</th>
+                                    <th scope="col">Gold</th>
+                                    <th scope="col">Platinum</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">Receipts</th>
+                                    <td>200</td>
+                                    <td>1000</td>
+                                    <td>Unlimited</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Customer Support</th>
+                                    <td><span class="general_check">✓</span></td>
+                                    <td><span class="general_check">✓</span></td>
+                                    <td><span class="general_check">✓</span></td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Price</th>
+                                    <td>$20</td>
+                                    <td>$50</td>
+                                    <td>$100</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div> 
-                    </div> 
+                    </div>  -->
+                
                 </div>
             </div> 
         </div>  
-     
+        <div class="basic-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4>Ioniq will change the way you think about CRM solutions due to it’s advanced tools and integrated functionalities</h4>
+                        {% if request.user.is_authenticated %}
+                            <a class="btn-outline-lg page-scroll" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
+                            {% else %}
+                            <a class="btn-outline-lg page-scroll" href="{% provider_login_url 'google' %}">Get started for free</a>
+                            <p class="p-large">* Free Trial, No Credit Card Required</p>
+                            {% endif %}
+                    </div> <!-- end of col -->
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </div>
 
-        
+        <div class="basic-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="image-container">
+                            <img class="img-fluid" src="{% static 'images/Honesty-rafiki.svg' %}" alt="alternative">
+                        </div> <!-- end of image-container -->
+                    </div> <!-- end of col -->
+                    <div class="col-lg-6">
+                        <div class="text-container">
+                            <h2>Improve customer experience and satisfaction</h2>
+                            <p>Velit dictum non proin egestas convallis nunc, eu auctor massa. Nam hendrerit, eros ut viverra lobortis, mauris nisi porta risus, placerat dignissim tellus auctor masse</p>
+                            <ul class="list-unstyled li-space-lg">
+                                <li class="d-flex">
+                                    <i class="fas fa-square"></i>
+                                    <div class="flex-grow-1">Fusce ipsum augue, ultrices rutrum est accel, pulvin</div>
+                                </li>
+                                <li class="d-flex">
+                                    <i class="fas fa-square"></i>
+                                    <div class="flex-grow-1">Fermentum elit. Vestibulum cursuso bibendum viverra</div>
+                                </li>
+                                <li class="d-flex">
+                                    <i class="fas fa-square"></i>
+                                    <div class="flex-grow-1">Quisque blandit pulvinar metus, eu sta malesuada</div>
+                                </li>
+                            </ul>
+                        </div> <!-- end of text-container -->
+                    </div> <!-- end of col -->
+                </div> <!-- end of row -->
+            </div> <!-- end of container -->
+        </div>
 
         
         <!-- end of testimonials -->
@@ -332,6 +448,7 @@
         <script src="{% static 'js/purecounter.min.js' %}"></script> <!-- Purecounter counter for statistics numbers -->
         <script src="{% static 'js/replaceme.min.js' %}"></script> <!-- ReplaceMe for rotating text -->
         <script src="{% static 'js/scripts.js' %}"></script> <!-- Custom scripts -->
+        
         
     </body>
 </html>

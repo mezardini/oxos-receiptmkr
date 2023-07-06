@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 {% load static %}
 {% load socialaccount %}
@@ -124,13 +126,13 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       <h5>Receipts</h5>
                       <!-- <span class="">Plan ends on <h6>June 20, 2023</h6></span> -->
-                      <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Buy receipts</a></span>
+                      <!-- <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Buy Receipts</a></span>
                       <div id="staticBackdrop" class="modal fade" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="row">
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                     <!-- end of col -->
+                                    
                                     <div class="col-lg-12">
                                       <form action="" method="post">
                                         {% csrf_token%}
@@ -140,9 +142,9 @@
                                                   <label class="input-group-text" required for="inputGroupSelect02">Choose plan</label>
                                                     <select class="custom-select" name="template_choice" id="inputGroupSelect02" required>
                                                       
-                                                      <option value="silver">Silver - $20 per month, 150 receipts</option>
-                                                      <option value="gold" selected="selected" >Gold - $50 per month, 500 receipts</option>
-                                                      <option value="platinum">Platinum - $100 per month, 1500 receipts</option>
+                                                      <option value="silver">Silver - $20 per month, 200 receipts</option>
+                                                      <option value="gold" selected="selected" >Gold - $50 per month, 1000 receipts</option>
+                                                      <option value="platinum">Platinum - $100 per month, Unlimited receipts</option>
                                                     </select>
                                                     
                                                   </div>
@@ -188,11 +190,11 @@
                                       </div>
                                       </form> 
                                    
-                                    </div> <!-- end of col -->
-                                </div> <!-- end of row -->
-                            </div> <!-- end of modal-content -->
-                        </div> <!-- end of modal-dialog -->
-                    </div>
+                                    </div> 
+                                </div> 
+                            </div> 
+                        </div> 
+                      </div> -->
                     </li>
                   </div>
                   <div class="card-body">
@@ -243,9 +245,10 @@
                       <blockquote class="blockquote mb-0">
                         <p><div class="code-block" id="my-container" style="background-color: #2F7CB1;">
                           <pre>
-                            <code class="codeCopy" style="color: antiquewhite; ">
-                              // Create an array of cart items
-                              const cartItems = [
+                            <code class="codeCopy " style="color: antiquewhite; margin-right: 2.5%;">
+                              function myFunction() {
+    
+                                const cartItems = [
                                 { quantity: 3, itemName: 'Example Item 1', itemPrice: 19.99, totalPrice: 59.97 },
                                 { quantity: 2, itemName: 'Example Item 2', itemPrice: 29.99, totalPrice: 59.98 }
                               ];
@@ -253,65 +256,69 @@
                               var business_name = 'Name you want on the receipt; examplestores';
                               var user_token = 'Your User Token';
                               var business_url = 'Your store url; examplestores.com';
-                              
-                              // Add additional fields to the JavaScript object
-                              var requestData = {
-                                'cart_items': 'Name of your cart item function',
-                                'name': business_name,
-                                'token': user_token,
-                                'website': business_url
-                              };
-                              
-                              // Send a POST request to the Oxos create_receipt API endpoint
-                              fetch('http://127.0.0.1:8000/api/create_receipt/', {
-                                method: 'POST',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                  'X-CSRFToken': getCookie('csrftoken') // Include CSRF token in the header
-                                },
-                                body: JSON.stringify(requestData), // Convert array to JSON string
-                              })
-                              .then(response => {
-                                if (!response.ok) {
-                                  throw new Error('Network response was not ok');
-                                }
-                                if (response.headers.get('content-type') === 'application/pdf') {
-                                  // Only trigger download if response is a valid PDF file
-                                  return response.blob();
-                                } else {
-                                  // Display error message in console
-                                  // console.error('Error: Invalid PDF file received from server');
-                                  return null;
-                                }
-                              })
-                              .then(blob => {
-                                if (blob) {
-                                  // Create a download link and trigger download
-                                  var downloadLink = document.createElement('a');
-                                  downloadLink.href = URL.createObjectURL(blob);
-                                  downloadLink.download = 'example.pdf';
-                                  downloadLink.click();
-                                }
-                              })
-                              .catch(error => {
-                                console.error('Error:', error);
-                              });
-                              
-                              // Function to get CSRF token from cookie
-                              function getCookie(name) {
-                                var cookieValue = null;
-                                if (document.cookie && document.cookie !== '') {
-                                  var cookies = document.cookie.split(';');
-                                  for (var i = 0; i < cookies.length; i++) {
-                                    var cookie = cookies[i].trim();
-                                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                      break;
+
+                                  // Add additional fields to the JavaScript object
+                                  var requestData = {
+                                      'cart_items': cartItems,
+                                      'name': name,
+                                      'token': token,
+                                      'website': website,
+                                      'customer':customer_email
+                                  };
+                                  
+                                  // Send a POST request to the Django REST API endpoint
+                                  fetch('http://127.0.0.1:8000/api/create_pdf/', {
+                                    method: 'POST',
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token in the header
+                                    },
+                                    body: JSON.stringify(requestData),  // Convert array to JSON string
+                                  })
+                                  .then(response => {
+                                    if (!response.ok) {
+                                      throw new Error('Network response was not ok');
                                     }
+                                    if (response.headers.get('content-type') === 'application/pdf') {
+                                      // Only trigger download if response is a valid PDF file
+                                      return response.blob();
+                                    } else {
+                                      // Display error message in console
+                                      // console.error('Error: Invalid PDF file received from server');
+                                      return null;
+                                    }
+                                  })
+                                  .then(blob => {
+                                    if (blob) {
+                                      // Create a download link and trigger download
+                                      var downloadLink = document.createElement('a');
+                                      downloadLink.href = URL.createObjectURL(blob);
+                                      downloadLink.download = name+'.pdf';
+                                      downloadLink.click();
+                                    }
+                                    
+                                  })
+                                  .catch(error => {
+                                    console.error('Error:', error);
+                                    console.log(name)
+                                  });
+                                  
+                                  // Function to get CSRF token from cookie
+                                  function getCookie(name) {
+                                    var cookieValue = null;
+                                    if (document.cookie && document.cookie !== '') {
+                                      var cookies = document.cookie.split(';');
+                                      for (var i = 0; i < cookies.length; i++) {
+                                        var cookie = cookies[i].trim();
+                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                          break;
+                                        }
+                                      }
+                                    }
+                                    return cookieValue;
                                   }
                                 }
-                                return cookieValue;
-                              }
                             </code>
                           </pre>
                         </div>

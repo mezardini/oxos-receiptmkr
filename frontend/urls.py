@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import Dashboard
+from .views import Dashboard, Home
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -9,11 +9,11 @@ app_name = "frontend"
 
 
 urlpatterns = [
-    path('', views.home, name="home"),
+    path('', Home.as_view(), name="home"),
     path('documentation/', views.documentation, name='documentation'),
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
-    path('dashboard/<int:pk>/', Dashboard.as_view(), name="dashboard"),
+    path('dashboard/<int:pk>/<str:string>/', Dashboard.as_view(), name="dashboard"),
     path('payment/<int:pk>/<str:transaction_id>/<str:status>/<int:amount>/', views.paymentLog, name='paymentlog'),
 
     

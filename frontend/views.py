@@ -19,173 +19,114 @@ from datetime import date
 from django.conf import settings
 from core_api.models import Business
 from core_api.models import ReceiptRequest
+import random
+import string
 
 # Create your views here.
 
 
 
-
-def home(request):
-    
-
-    return render(request, 'index.html')
+class Home(View): 
+    template_name = 'index.html'
+    string = (''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=8)))
+    def get(self, request):
+        access_string = Home.string
+        
+        context = {'access_string':access_string}
+        return render(request, 'index.html', context)
 
 def documentation(request):
     
-
-    return render(request, 'api-doc.html')
+    access_string = Home.string
+        
+    context = {'access_string':access_string}
+    return render(request, 'api-doc.html', context)
 
 def error_404_view(request, exception):
    
     # we add the path to the 404.html file
     # here. The name of our HTML file is 404.html
     return render(request, '404.html')
-# @login_required(login_url='frontend:signup')
-# def dashboard(request, pk):
-    
-#     user = User.objects.get(id=pk)
-#     if request.user == user:
-#         biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
-        
 
-#         users_in_group = Group.objects.get(name="Business").user_set.all()
-#         if user not in users_in_group :
-#             seller_biz = Seller.objects.create(
-#                 user = user,
-#                 biz_code = biz_token
-#             )
-#             seller_biz.save()
-#             user_group = Group.objects.get(name="Business")
-#             user.groups.add(user_group)
-        
-#             # biz = Business.objects.create(
-#             #     name = request.POST['biz_name'],
-#             #     website = request.POST['web_url'],
-#             #     biz_code = biz_token+str(user.pk),
-#             #     text = request.POST['additional_text'],
-#             #     template = request.POST['template_choice'],
-#             #     user_no = user.pk
-#             # )
-#             # biz.save()
-#         biz = Seller.objects.get(user=user)
-#         total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
-#         specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
-
-#         # Get the current date
-#         current_date = datetime.now()
-        
-#         # Calculate the difference in days
-#         days_difference = (specific_date - current_date).days
-#         receipts_allocated = biz.receipt_allocation
-
-        
-#         user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Basic':'You are on basic plan, your plan expires on 20th June, 2023', 'Medium':'You are on medium plan, your plan expires on 20th June, 2023', 'Large':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
-#         subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
-#         users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
-#         users_in_group = Group.objects.get(name="Business").user_set.all()
-#         users_in_group3 = Group.objects.get(name="Large").user_set.all()
-#         users_in_group2 = Group.objects.get(name="Medium").user_set.all()
-#         if user in users_in_freegroup:
-#             subscription_text = user_plan_and_text['Free']
-            
-#         elif user in users_in_group:
-#             subscription_text = user_plan_and_text['Basic']
-            
-
-#         elif user in users_in_group2:
-#             subscription_text = user_plan_and_text['Medium']
-            
-        
-#         elif user in users_in_group3:
-#             subscription_text = user_plan_and_text['Large']
-            
-
-#         bar_width_1 = 5 #the value should be 0(zero) but i don't want the progress bar blank
-#         if total_receipts > 0:
-#             bar_width_1 = (total_receipts/(total_receipts+receipts_allocated))*100
-#         bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
-
-#         context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 
-#                    'days_difference':days_difference, 'receipts_allocated':receipts_allocated, 'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2  }
-#         return render(request, 'dashboard.html', context)
-#     else:
-#         return redirect('frontend:home')
-
-# @LoginRequiredMixin(login_url='frontend:signup')
 class Dashboard(LoginRequiredMixin, View):
-    login_url = 'frontend:signup'  # Specify the login URL
-    # redirect_field_name = 'frontend:signup' 
+    login_url = 'frontend:signup'  
+    
     template_name = 'dashboard.html'
     
-    def get(self, request, pk):
-    
-        user = User.objects.get(id=pk)
-        if request.user == user:
-            biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
-            
-
-            users_in_group = Group.objects.get(name="Business").user_set.all()
-            if user not in users_in_group :
-                seller_biz = Seller.objects.create(
-                    user = user,
-                    biz_code = biz_token
-                )
-                seller_biz.save()
-                user_group = Group.objects.get(name="Business")
-                user.groups.add(user_group)
-            
-                # biz = Business.objects.create(
-                #     name = request.POST['biz_name'],
-                #     website = request.POST['web_url'],
-                #     biz_code = biz_token+str(user.pk),
-                #     text = request.POST['additional_text'],
-                #     template = request.POST['template_choice'],
-                #     user_no = user.pk
-                # )
-                # biz.save()
-            biz = Seller.objects.get(user=user)
-            total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
-            specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
-
-            # Get the current date
-            current_date = datetime.now()
-            
-            # Calculate the difference in days
-            days_difference = (specific_date - current_date).days
-            receipts_allocated = biz.receipt_allocation
-
-            
-            user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Basic':'You are on basic plan, your plan expires on 20th June, 2023', 'Medium':'You are on medium plan, your plan expires on 20th June, 2023', 'Large':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
-            subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
-            users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
-            users_in_group = Group.objects.get(name="Business").user_set.all()
-            users_in_group3 = Group.objects.get(name="Large").user_set.all()
-            users_in_group2 = Group.objects.get(name="Medium").user_set.all()
-            if user in users_in_freegroup:
-                subscription_text = user_plan_and_text['Free']
-                
-            elif user in users_in_group:
-                subscription_text = user_plan_and_text['Basic']
+    def get(self, request, pk, string):
+        if string == Home.string:
+            user = User.objects.get(id=pk)
+            if request.user == user:
+                biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
                 
 
-            elif user in users_in_group2:
-                subscription_text = user_plan_and_text['Medium']
+                users_in_group = Group.objects.get(name="Business").user_set.all()
+                if user not in users_in_group :
+                    seller_biz = Seller.objects.create(
+                        user = user,
+                        biz_code = biz_token
+                    )
+                    seller_biz.save()
+                    user_group = Group.objects.get(name="Business")
+                    user.groups.add(user_group)
                 
-            
-            elif user in users_in_group3:
-                subscription_text = user_plan_and_text['Large']
+                    # biz = Business.objects.create(
+                    #     name = request.POST['biz_name'],
+                    #     website = request.POST['web_url'],
+                    #     biz_code = biz_token+str(user.pk),
+                    #     text = request.POST['additional_text'],
+                    #     template = request.POST['template_choice'],
+                    #     user_no = user.pk
+                    # )
+                    # biz.save()
+                biz = Seller.objects.get(user=user)
+                total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
+                specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
+
+                # Get the current date
+                current_date = datetime.now()
                 
+                # Calculate the difference in days
+                days_difference = (specific_date - current_date).days
+                receipts_allocated = biz.receipt_allocation
+                receipts_allocated_text = receipts_allocated
+                if receipts_allocated > 100000:
+                    receipts_allocated_text = 'Unlimited'
 
-            bar_width_1 = 5 #the value should be 0(zero) but i don't want the progress bar blank
-            if total_receipts > 0:
-                bar_width_1 = (total_receipts/(total_receipts+receipts_allocated))*100
-            bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
+                
+                user_plan_and_text = {'Free':'You are on free plan, your plan expires on 20th June, 2023','Basic':'You are on basic plan, your plan expires on 20th June, 2023', 'Medium':'You are on medium plan, your plan expires on 20th June, 2023', 'Large':'You are on Enterprise plan, your plan expires on 20th June, 2023' }
+                subscription_text = 'You are on free trial, your plan expires on 20th June, 2023'
+                users_in_freegroup = Group.objects.get(name="Free tier").user_set.all()
+                users_in_group = Group.objects.get(name="Business").user_set.all()
+                users_in_group3 = Group.objects.get(name="Large").user_set.all()
+                users_in_group2 = Group.objects.get(name="Medium").user_set.all()
+                if user in users_in_freegroup:
+                    subscription_text = user_plan_and_text['Free']
+                    
+                elif user in users_in_group:
+                    subscription_text = user_plan_and_text['Basic']
+                    
 
-            context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 
-                    'days_difference':days_difference, 'receipts_allocated':receipts_allocated, 'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2  }
-            return render(request, 'dashboard.html', context)
+                elif user in users_in_group2:
+                    subscription_text = user_plan_and_text['Medium']
+                    
+                
+                elif user in users_in_group3:
+                    subscription_text = user_plan_and_text['Large']
+                    
+
+                bar_width_1 = 5 #the value should be 0(zero) but i don't want the progress bar blank
+                if total_receipts > 0:
+                    bar_width_1 = (total_receipts/(total_receipts+receipts_allocated))*100
+                bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
+
+                context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 
+                        'days_difference':days_difference, 'receipts_allocated':receipts_allocated_text, 'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2  }
+                return render(request, 'dashboard.html', context)
+            else:
+                return redirect('frontend:home')
         else:
-            return redirect('frontend:home')
+                return redirect('frontend:home')
         
     def post(self, request, pk):
         user = User.objects.get(id=pk)
@@ -297,11 +238,11 @@ def paymentLog(request, pk, transaction_id, status, amount ):
     current_date = date.today()
     allocation = 0
     if amount == 20:
-        allocation = 150
+        allocation = 200
     elif amount == 50:
-        allocation = 500
+        allocation = 1000
     elif amount == 100:
-        allocation = 1500
+        allocation = 150000
     payment_log = PaymentLogs.objects.create(
             payer = user,
             amount = amount,
