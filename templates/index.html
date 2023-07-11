@@ -125,7 +125,7 @@
                     </ul>
                     <span class="nav-item">
                         {% if request.user.is_authenticated %}
-                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
+                        <a class="btn-outline-sm" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                         {% else %}
                         <a class="btn-outline-sm"  href="{% provider_login_url 'google' %}">Sign In with google</a>
                         {% endif %}
@@ -146,7 +146,7 @@
                             <h1 class="h1-large" style="color: #000000;">Generate <span class="replace-me">receipts</span> for your customers on the fly </h1>
                             <p class="p-large">Elevate your customer experience with beautifully designed receipts</p>
                             {% if request.user.is_authenticated %}
-                            <a class="btn-solid-lg" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
+                            <a class="btn-solid-lg" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                             {% else %}
                             <a class="btn-solid-lg" href="{% provider_login_url 'google' %}">Get started for free</a>
                             <p class="p-large">* Free Trial, No Credit Card Required</p>
@@ -156,7 +156,7 @@
                     </div> <!-- end of col -->
                     <div class="col-lg-6">
                         <div class="image-container">
-                            <img class="img-fluid" src="{% static 'images/Receipt-amico.svg' %}" alt="alternative">
+                            <img class="img-fluid" src="{% static 'img/Receipt.svg' %}"  alt="alternative">
                         </div> <!-- end of image-container -->
                     </div> <!-- end of col -->
                 </div> <!-- end of row -->
@@ -184,7 +184,7 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Register</h4>
-                                <p>Sign Up with us to become a member</p>
+                                <p>Sign Up to become a member, you get 50 free receipts</p>
                             </div>
                         </div>
                         <!-- end of card -->
@@ -192,7 +192,7 @@
                         <!-- Card -->
                         <div class="card">
                             <div class="card-icon green">
-                                <img src="{% static 'images/Documents-amico.svg' %}" alt="Business illustrations by Storyset">
+                                <img src="{% static 'img/copy-code.svg' %}" alt="Business illustrations by Storyset">
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Add few lines of code</h4>
@@ -204,10 +204,10 @@
                         <!-- Card -->
                         <div class="card">
                             <div class="card-icon blue">
-                                <img src="{% static 'images/Honesty-rafiki.svg' %}" alt="">
+                                <img src="{% static 'images/Documents-amico.svg' %}" alt="">
                             </div>
                             <div class="card-body">
-                                <h4 class="card-title">Receipts download </h4>
+                                <h4 class="card-title">Receipt Generation</h4>
                                 <p>The receipts are generated after payment has been confirmed successful</p>
                             </div>
                         </div>
@@ -278,9 +278,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4>Ioniq will change the way you think about CRM solutions due to it’s advanced tools and integrated functionalities</h4>
+                        <h4>Boost Customer Confidence with Customized Receipts - Create Invoices Effortlessly!</h4>
                         {% if request.user.is_authenticated %}
-                            <a class="btn-outline-lg page-scroll" href="{% url 'frontend:dashboard' user.id access_string %}">Dashboard</a>
+                            <a class="btn-outline-lg page-scroll" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                             {% else %}
                             <a class="btn-outline-lg page-scroll" href="{% provider_login_url 'google' %}">Get started for free</a>
                             <p class="p-large">* Free Trial, No Credit Card Required</p>
@@ -301,25 +301,47 @@
                     <div class="col-lg-6">
                         <div class="text-container">
                             <h2>Improve customer experience and satisfaction</h2>
-                            <p>Velit dictum non proin egestas convallis nunc, eu auctor massa. Nam hendrerit, eros ut viverra lobortis, mauris nisi porta risus, placerat dignissim tellus auctor masse</p>
-                            <ul class="list-unstyled li-space-lg">
-                                <li class="d-flex">
-                                    <i class="fas fa-square"></i>
-                                    <div class="flex-grow-1">Fusce ipsum augue, ultrices rutrum est accel, pulvin</div>
-                                </li>
-                                <li class="d-flex">
-                                    <i class="fas fa-square"></i>
-                                    <div class="flex-grow-1">Fermentum elit. Vestibulum cursuso bibendum viverra</div>
-                                </li>
-                                <li class="d-flex">
-                                    <i class="fas fa-square"></i>
-                                    <div class="flex-grow-1">Quisque blandit pulvinar metus, eu sta malesuada</div>
-                                </li>
-                            </ul>
-                        </div> <!-- end of text-container -->
+                            <!-- <p>Automated receipt generation ensures accuracy and consistency in the information presented on receipts. It minimizes the chances of human error or discrepancies, 
+                                providing customers with reliable and error-free documentation of their purchases. This helps build trust and confidence in your business.</p> -->
+                                <ul class="list-unstyled li-space-lg">
+                                    <li class="d-flex">
+                                        <i class="fas fa-square"></i>
+                                        <div class="flex-grow-1">Easy Access and Convenience: With a receipt generating platform, customers can easily access their receipts online or receive them via email.</div>
+                                    </li>
+                                    <li class="d-flex">
+                                        <i class="fas fa-square"></i>
+                                        <div class="flex-grow-1">Accuracy and Consistency: Automated receipt generation ensures accuracy and consistency in the information presented on receipts.</div>
+                                    </li>
+                                    <li class="d-flex">
+                                        <i class="fas fa-square"></i>
+                                        <div class="flex-grow-1">Enhanced Communication: Receipts can serve as a communication channel to engage with customers beyond the point of sale. 
+                                            You can include thank-you notes, promotional offers, upcoming events, or links to your website and social media channels.</div>
+                                    </li>
+                                </ul>
+                            </div> <!-- end of text-container -->
                     </div> <!-- end of col -->
                 </div> <!-- end of row -->
             </div> <!-- end of container -->
+        </div>
+
+        <div class="basic-2">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-6">
+                        <div class="text-container">
+                           
+                            <h2>Sales Analytics Dashboard</h2>
+                            <p>Oxos offers reporting features to track and analyze sales data, such as total revenue, sales trends, average checkout price and many others.</p>
+                        </div> 
+                    </div> 
+                    <div class="col-lg-6">
+                        <div class="image-container">
+                            <img class="img-fluid" src="{% static 'images/Revenue-bro.svg' %}" alt="alternative">
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
         </div>
 
         

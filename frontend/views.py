@@ -22,6 +22,7 @@ from core_api.models import ReceiptRequest
 import random
 import string
 
+
 # Create your views here.
 
 
@@ -53,9 +54,9 @@ class Dashboard(LoginRequiredMixin, View):
     
     template_name = 'dashboard.html'
     
-    def get(self, request, pk, string):
-        if string == Home.string:
-            user = User.objects.get(id=pk)
+    def get(self, request ):
+        
+            user = User.objects.get(id=request.user.id)
             if request.user == user:
                 biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
                 
@@ -125,8 +126,7 @@ class Dashboard(LoginRequiredMixin, View):
                 return render(request, 'dashboard.html', context)
             else:
                 return redirect('frontend:home')
-        else:
-                return redirect('frontend:home')
+        
         
     def post(self, request, pk):
         user = User.objects.get(id=pk)

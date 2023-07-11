@@ -13,7 +13,7 @@ urlpatterns = [
     path('documentation/', views.documentation, name='documentation'),
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
-    path('dashboard/<int:pk>/<str:string>/', Dashboard.as_view(), name="dashboard"),
+    path('dashboard/', Dashboard.as_view(), name="dashboard"),
     path('payment/<int:pk>/<str:transaction_id>/<str:status>/<int:amount>/', views.paymentLog, name='paymentlog'),
 
     
