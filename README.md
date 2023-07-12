@@ -18,7 +18,7 @@ Oxos is a free and user-friendly platform designed to assist businesses in gener
 
 To run Oxos locally, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/yourusername/oxos.git`
+1. Clone the repository: `git clone https://github.com/mezardini/oxos-receiptmkr.git`
 2. Install the required dependencies: `pip install -r requirements.txt`
 3. Set up the database and perform migrations: `python manage.py migrate`
 4. Start the development server: `python manage.py runserver`
