@@ -50,7 +50,7 @@ def error_404_view(request, exception):
     return render(request, '404.html')
 
 class Dashboard(LoginRequiredMixin, View):
-    login_url = 'frontend:signup'  
+    login_url = 'frontend:home'  
     
     template_name = 'dashboard.html'
     

@@ -61,14 +61,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#features">Features</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#details">Details</a>
-                        </li>
+                      
                         <li class="nav-item dropdown">
                             <!-- <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Pricing</a>
                             <ul class="dropdown-menu" aria-labelledby="dropdown01">
                                 <div class="card text-center">
-                                    <!-- <div class="card-header">
+                                     <div class="card-header">
                                       USER TOKEN
                                       <span><button onclick="copyCodeToken()" class="btn btn-success"><i class="far fa-copy"></i></button></span>
                                     </div> -->
@@ -84,7 +82,7 @@
                                 Pricing
                               </a>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <table class="table table-bordered">
+                                <!-- <table class="table table-bordered">
                                     <thead>
                                       <tr>
                                         <th scope="col"></th>
@@ -113,7 +111,8 @@
                                         <td><span class="btn-solid-lg">$100</span></td>
                                       </tr>
                                     </tbody>
-                                  </table>
+                                  </table> -->
+                                  <p>Pricing is currently free</p>
                               </div>
                         </li> 
                         <li class="nav-item">
@@ -127,7 +126,7 @@
                         {% if request.user.is_authenticated %}
                         <a class="btn-outline-sm" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                         {% else %}
-                        <a class="btn-outline-sm"  href="{% provider_login_url 'google' %}">Sign In with google</a>
+                        <a class="btn-outline-sm"  href="{% provider_login_url 'google' %}">Sign In</a>
                         {% endif %}
                         
                     </span>
@@ -141,23 +140,18 @@
         <header id="header" class="header">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="text-container">
+                    <div class="col-lg-12">
+                        <div class="text-container text-center">
                             <h1 class="h1-large" style="color: #000000;">Generate <span class="replace-me">receipts</span> for your customers on the fly </h1>
                             <p class="p-large">Elevate your customer experience with beautifully designed receipts</p>
                             {% if request.user.is_authenticated %}
                             <a class="btn-solid-lg" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                             {% else %}
                             <a class="btn-solid-lg" href="{% provider_login_url 'google' %}">Get started for free</a>
-                            <p class="p-large">* Free Trial, No Credit Card Required</p>
+                            <!-- <p class="p-large">* Free Trial, No Credit Card Required</p> -->
                             {% endif %}
                             
                         </div> <!-- end of text-container -->
-                    </div> <!-- end of col -->
-                    <div class="col-lg-6">
-                        <div class="image-container">
-                            <img class="img-fluid" src="{% static 'img/Receipt.svg' %}"  alt="alternative">
-                        </div> <!-- end of image-container -->
                     </div> <!-- end of col -->
                 </div> <!-- end of row -->
             </div> <!-- end of container -->
@@ -283,7 +277,7 @@
                             <a class="btn-outline-lg page-scroll" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                             {% else %}
                             <a class="btn-outline-lg page-scroll" href="{% provider_login_url 'google' %}">Get started for free</a>
-                            <p class="p-large">* Free Trial, No Credit Card Required</p>
+                            <!-- <p class="p-large">* Free Trial, No Credit Card Required</p> -->
                             {% endif %}
                     </div> <!-- end of col -->
                 </div> <!-- end of row -->
@@ -324,7 +318,7 @@
             </div> <!-- end of container -->
         </div>
 
-        <div class="basic-2">
+        <!-- <div class="basic-2">
             <div class="container">
                 <div class="row">
                     
@@ -342,7 +336,7 @@
                     </div> 
                 </div> 
             </div> 
-        </div>
+        </div> -->
 
         
         <!-- end of testimonials -->
