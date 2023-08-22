@@ -12,6 +12,7 @@ from .serializers import  BusinessSerializer, CartItemSerializer, ReceiptRequest
 from .models import PdfFile, PdfFilepath, Business, ReceiptRequest
 from django.http import FileResponse
 from rest_framework.decorators import action
+import random
 import jinja2
 import pdfkit
 from datetime import datetime
@@ -113,7 +114,7 @@ def download_pdf(request):
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 'business_url':business_url}
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
-            template = template_env.get_template('pdftemplates/newreceipt.html')
+            template = template_env.get_template('templates/newreceipt.html')
             output_text = template.render(context)
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
@@ -224,6 +225,7 @@ class CreatePDF(APIView):
         seller = Seller.objects.get(user=user_no)
         seller_mail = seller.user.email
         allocation_quota = seller.receipt_allocation
+        random_num = str(random.randint(11111,99999)) + str(user_no)
         # biz_name = biz.name
         if allocation_quota > 0:
 
@@ -259,11 +261,13 @@ class CreatePDF(APIView):
                     'total_price': total_price
                 })
             json_data = json.loads(request.body.decode('utf-8'))
+            total_cart_price = sum(cart_item['totalPrice'] for cart_item in cart_items_data)
 
-            context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 'business_url':business_url}
+            context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 
+                       'business_url':business_url, 'total_cart_price':total_cart_price, 'random_num':random_num}
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
-            template = template_env.get_template('pdftemplates/newreceipt.html')
+            template = template_env.get_template('templates/newreceipt.html')
             output_text = template.render(context)
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)

@@ -59,10 +59,10 @@
                             <a class="nav-link" href="{% url 'frontend:home' %}#features">Features</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'frontend:home' %}#details">Details</a>
+                            <a class="nav-link" href="{% url 'frontend:home' %}#contactus">Contact Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'frontend:home' %}#pricing">Pricing</a>
+                            <a class="nav-link" href="{% url 'frontend:documentation'  %}">Documentation</a>
                         </li>
                         
                     </ul>
@@ -79,66 +79,19 @@
         
         
         <!-- Basic -->
-        <div class="ex-form-1 pt-5 pb-5">
+        <div class="ex-form-1 pt-5 pb-5" style="margin-top: 10%;">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6 col-xl-5">
+                    <div class="col-lg-8 col-xl-6">
                         <div class="text-container">
-                              <!-- Sign Up Form -->
-                            <!-- <form action="" method="POST">
-                                {% csrf_token %}
-                                
-                                {% for message in messages %}
-                
-                                    <div class="alert alert-info">
-                                        <a class="close" href="#" data-dismiss="alert">×</a>
-                                           {{ message }}
-                                    </div>
-                                
-                                {% endfor %}
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="floatingInput">First Name</label>
-                                        <input type="text" name="fname" class="form-control" id="floatingInput" placeholder="John">
-                                        
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="floatingInput">Last Name</label>
-                                        <input type="text" name="lname" class="form-control" id="floatingInput" placeholder="Doe">
-                                    </div>
-                                </div>
-
-                                <div class="mb-4 form-floating">
-                                    <label for="floatingInput"></label>
-                                    <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                    
-                                </div>
-                                <div class="mb-4 form-floating">
-                                    <label for="floatingInput">Password</label>
-                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                    
-                                  
-                                </div>
-                                <div class="mb-4 form-floating">
-                                    <label for="floatingInput">Confirm Password</label>
-                                    <input type="password" name="password2" class="form-control" id="floatingPassword" placeholder="Confirm Password">
-                                   
-                                  
-                                </div>
-                                
-                            
-                              
-                                <button type="submit"  class="form-control-submit-button"  >Sign Up</button>
-                            </form>
-                             -->
-                            
+                           
                             <br>
                             <br>
                             <br>
                             <br>
                             <br>
                             <div class="col-xl-10 offset-xl-1">
-                                <h1 class="text-center">Join us</h1>
+                                <h1 class="text-center">Sign In</h1>
                             </div>
                             <br>
                             <br>
@@ -152,18 +105,15 @@
                             
                             <div class="dropdown-divider"></div>
                             <br>
-                            <div class="col-12 text-center">
-                                <button class="btn btn-outline-dark "><a href="{% provider_login_url 'facebook' method='js_sdk' %}" style="text-decoration:none"><h5 style="color: rgb(3, 3, 3);"><img src="{% static 'images/Facebook.svg' %}"> Sign in with Facebook</h5></a></button>
-                                
-                            </div>
+                            
                             
                             <!-- end of sign up form -->
 
                         </div> <!-- end of text-container -->
                     </div> <!-- end of col -->
-                    <div class="col-lg-6 col-xl-7">
+                    <div class="col-lg-4 col-xl-6">
                         <div class="image-container">
-                            <img class="img-fluid" src="{% static 'images/Add User-pana.svg' %}" alt="alternative">
+                            <img class="img-fluid" src="{% static 'images/add-user.svg' %}" alt="alternative">
                         </div> <!-- end of image-container -->
                     </div> <!-- end of col -->
                 </div> <!-- end of row -->
@@ -176,19 +126,6 @@
          <!-- end of footer -->  
         <!-- end of footer -->
 
-
-        <!-- Copyright -->
-        <div class="copyright">
-            <div class="container">
-                
-                    <div class="text-center">
-                        <p style="color: black;">OXOS-RECEIPTMKR</p>
-                    </div> <!-- end of col -->
-                    <!-- end of col -->
-                </div> <!-- enf of row -->
-            </div> <!-- end of container -->
-        </div> <!-- end of copyright --> 
-        <!-- end of copyright -->
         
 
         <!-- Back To Top Button -->

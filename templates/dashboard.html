@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 {% load static %}
 {% load socialaccount %}
+
+
+
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -61,13 +64,20 @@
                           <a class="nav-link" href="{% url 'frontend:documentation'  %}">Docs</a>
                         </li>
                        
-                        <li class="nav-item ">
+                        <!-- <li class="nav-item dropdown">
                             
-                            
-                        </li>
+                          <a class="btn-outline-sm"  role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{{user.username}}</a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          
+                              <p>Pricing is currently free</p>
+                          </div>
+                        </li> -->
                     </ul>
-                    <span class="nav-item">
-                      <a class="btn-outline-sm"  >{{user.username}}</a>
+                    <span class="nav-item dropdown">
+                      <a class="btn-outline-sm"  role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >{{user.username}}</a>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="nav-link" href="{% url 'frontend:signout'  %}">Sign Out</a>
+                      </div>
                     </span>
                 </div>
                 <!-- end of navbar-collapse -->
@@ -125,77 +135,7 @@
                   <div class="card-header">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                       <h5>Receipts</h5>
-                      <!-- <span class="">Plan ends on <h6>June 20, 2023</h6></span> -->
-                      <!-- <span class=""><a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Buy Receipts</a></span>
-                      <div id="staticBackdrop" class="modal fade" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="row">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    
-                                    <div class="col-lg-12">
-                                      <form action="" method="post">
-                                        {% csrf_token%}
-                                        <div class="form-group ">
-                                          <div class="form-group col-md-12">
-                                                <div class="input-group">
-                                                  <label class="input-group-text" required for="inputGroupSelect02">Choose plan</label>
-                                                    <select class="custom-select" name="template_choice" id="inputGroupSelect02" required>
-                                                      
-                                                      <option value="silver">Silver - $20 per month, 200 receipts</option>
-                                                      <option value="gold" selected="selected" >Gold - $50 per month, 1000 receipts</option>
-                                                      <option value="platinum">Platinum - $100 per month, Unlimited receipts</option>
-                                                    </select>
-                                                    
-                                                  </div>
-                                          </div>
-                                          <div class="form-group col-md-12">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" id="basic-addon1">First Name</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="biz_name" placeholder="John" aria-label="Username" aria-describedby="basic-addon1">
-                                              </div> 
-                                          </div>
-                                          <div class="form-group col-md-12">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" id="basic-addon1">Last Name</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="biz_name" placeholder="Doe" aria-label="Username" aria-describedby="basic-addon1">
-                                              </div> 
-                                          </div>
-                                          <div class="form-group col-md-12">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" id="basic-addon1">Mobile Number</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="biz_name" placeholder="+12345679866" aria-label="mobileNum" aria-describedby="basic-addon1">
-                                              </div> 
-                                          </div>
-                                          <div class="form-group col-md-12">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                  <span class="input-group-text" id="basic-addon1">Email Address</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="biz_name" value="{{user.email}}" placeholder="{{user.email}}" aria-label="Username" aria-describedby="basic-addon1">
-                                              </div> 
-                                          </div>
-                                         
-                                        
-                                        </div>
-                                        
-                                      <div class="col-md-12 text-center">
-                                        <button type="submit" class="btn btn-primary">Proceed to pay</button>
-                                      </div>
-                                      </form> 
-                                   
-                                    </div> 
-                                </div> 
-                            </div> 
-                        </div> 
-                      </div> -->
-                    </li>
+                      </li>
                   </div>
                   <div class="card-body">
                     
@@ -229,7 +169,7 @@
                                       <div class="col-lg-12">
                                         <blockquote class="blockquote mb-0">
                                             <div class="text-center">
-                                            <img src="{% static 'img/receipt_template.png' %}" alt="Receipt Template">
+                                            <img src="{% static 'img/receipt-tem.png' %}" alt="Receipt Template">
                                           </div>
                                         </blockquote>
                                       </div> <!-- end of col -->
@@ -248,18 +188,14 @@
                             <code class="codeCopy " style="color: antiquewhite; margin-right: 2.5%;">
                               function myFunction() {
     
-                                const cartItems = [
-                                { quantity: 3, itemName: 'Example Item 1', itemPrice: 19.99, totalPrice: 59.97 },
-                                { quantity: 2, itemName: 'Example Item 2', itemPrice: 29.99, totalPrice: 59.98 }
-                              ];
-                              
-                              var business_name = 'Name you want on the receipt; examplestores';
-                              var user_token = 'Your User Token';
-                              var business_url = 'Your store url; examplestores.com';
-
+                                
+                                  var name = [Your Business Name]';
+                                  var token = '{{biz.biz_code}}';
+                                  var website = [Your Business Url];
+                                  var customer_email = [Your Email Address];
                                   // Add additional fields to the JavaScript object
                                   var requestData = {
-                                      'cart_items': cartItems,
+                                      'cart_items': [Your Cart Items],
                                       'name': name,
                                       'token': token,
                                       'website': website,

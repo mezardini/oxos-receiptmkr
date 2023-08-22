@@ -170,7 +170,7 @@ footer {
 
       <p>Customer name: {{name}} </p>
       <p> Date : {{date}} </p>
-      <p> Receipt ID : 9809345 </p>
+      <p> Receipt ID : {{random_num}} </p>
 
     </div>
 
@@ -207,13 +207,11 @@ footer {
     <!-- Sub and total price -->
     <div class="totalprice">
 
-      <p class="sub"> Subtotal <span> 128 &dollar; </span></p>
-
-      <p class="del"> Delivery <span> 10 &dollar; </span> </p>
+    
 
       <hr>
 
-      <p class="tot"> Total <span>  &dollar; {{ total_price }} </span> </p>
+      <p class="tot"> Total <span>  &dollar; {{ total_cart_price }} </span> </p>
 
     </div>
 

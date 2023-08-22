@@ -176,8 +176,8 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = ('frontend:home')
-LOGIN_REDIRECT_URL = reverse_lazy('frontend:home')
+LOGIN_REDIRECT_URL = ('frontend:dashboard')
+LOGIN_REDIRECT_URL = reverse_lazy('frontend:dashboard')
 
 
 SOCIALACCOUNT_LOGIN_ON_GET=True

@@ -86,66 +86,116 @@
                 
                 <h1 class="text-center">Oxos API Documentation</h1>
 
-    <h2 style="color: black;">Overview</h2>
-    <p>
-      The DRF API is a RESTful web service that allows clients to interact with
-      a database of cart items. The API provides endpoints for creating, reading,
-      updating, and deleting cart items.
-    </p>
-
-    <h2 style="color: black;">Authentication</h2>
-    <p>
-      The DRF API uses token authentication to secure endpoints that modify
-      cart items. To obtain a token, send a POST request to the /api/token/
-      endpoint with valid credentials. The API will respond with a token that
-      can be used in subsequent requests by including it in the Authorization
-      header.
-    </p>
-
-    <h2 style="color: black;">Endpoints</h2>
-
-    <h3 style="color: black;">GET /api/cartitems/</h3>
-    <p>
-      Returns a list of all cart items in the database.
-    </p>
-
-    <h3 style="color: black;">POST /api/cartitems/</h3>
-    <p>
-      Creates a new cart item in the database with the provided data. The
-      request body should be a JSON object with the following fields:
-      <ul>
-        <li><code>name</code>: The name of the item.</li>
-        <li><code>price</code>: The price of the item.</li>
-        <li><code>quantity</code>: The quantity of the item.</li>
-      </ul>
-      The API will respond with a JSON object representing the created cart
-      item.
-    </p>
-
-    <h3 style="color: black;">GET /api/cartitems/{id}/</h3>
-    <p>
-      Returns the cart item with the specified ID. If the cart item does not
-      exist, the API will respond with a 404 status code.
-    </p>
-
-    <h3 style="color: black;">PUT /api/cartitems/{id}/</h3>
-    <p>
-      Updates the cart item with the specified ID with the provided data. The
-      request body should be a JSON object with the following fields:
-      <ul>
-        <li><code>name</code>: The name of the item.</li>
-        <li><code>price</code>: The price of the item.</li>
-        <li><code>quantity</code>: The quantity of the item.</li>
-      </ul>
-      The API will respond with a JSON object representing the updated cart
-      item.
-    </p>
-
-    <h3 style="color: black;">DELETE /api/cartitems/{id}/</h3>
-    <p>
-      Deletes the cart item with the specified ID. If the cart item does not
-      exist, the API will respond with a 404 status code.
-    </p> <!-- end of row --> 
+                <div class="ql-editor" contenteditable="false" data-placeholder="Start writing and highlight text to format...">
+                  <h2 style="color: black;">Overview</h2>
+                  <p>
+                    The Oxos Receipt Generator API is a RESTful web service that allows sellers to send cart items after successful payment and generate receipts. This API provides endpoints for creating receipts based on the provided cart items.
+                  </p>
+                
+                  <h2 style="color: black;">Authentication</h2>
+                  <p>
+                    The Oxos Receipt Generator API uses token-based authentication. Sellers must include a valid token in the request header to access the endpoints that generate receipts.
+                  </p>
+                
+                  <h2 style="color: black;">Endpoints</h2>
+                
+                  <h3 style="color: black;">POST /api/create_receipt/</h3>
+                  <p>
+                    Creates a new receipt based on the provided cart items. The request body should be a JSON object with the following fields:
+                    <ul>
+                      <li><code>cart_items</code>: An array of cart item objects. Include Item name, Item Quantity and Total Price of the item</li>
+                      <li><code>name</code>: Name of the seller's business.</li>
+                      <li><code>token</code>: Authentication token of the seller.</li>
+                      <li><code>website</code>: URL of the seller's website.</li>
+                      <li><code>customer</code>: Email address of the customer.</li>
+                    </ul>
+                    The API will respond with a PDF receipt file.
+                  </p>
+                
+                  <h2 style="color: black;">Example Usage</h2>
+                  <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                      <p><div class="code-block" id="my-container" style="background-color: #2F7CB1;">
+                        <pre>
+                          <code class="codeCopy " style="color: antiquewhite; margin-right: 2.5%;">
+                            function myFunction() {
+  
+                              
+                                var name = [Your Business Name]';
+                                var token = 'Your Token';
+                                var website = [Your Business Url];
+                                var customer_email = [Your Email Address];
+                                // Add additional fields to the JavaScript object
+                                var requestData = {
+                                    'cart_items': [Your Cart Items],
+                                    'name': name,
+                                    'token': token,
+                                    'website': website,
+                                    'customer':customer_email
+                                };
+                                
+                                // Send a POST request to the Django REST API endpoint
+                                fetch('http://127.0.0.1:8000/api/create_pdf/', {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token in the header
+                                  },
+                                  body: JSON.stringify(requestData),  // Convert array to JSON string
+                                })
+                                .then(response => {
+                                  if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                  }
+                                  if (response.headers.get('content-type') === 'application/pdf') {
+                                    // Only trigger download if response is a valid PDF file
+                                    return response.blob();
+                                  } else {
+                                    // Display error message in console
+                                    // console.error('Error: Invalid PDF file received from server');
+                                    return null;
+                                  }
+                                })
+                                .then(blob => {
+                                  if (blob) {
+                                    // Create a download link and trigger download
+                                    var downloadLink = document.createElement('a');
+                                    downloadLink.href = URL.createObjectURL(blob);
+                                    downloadLink.download = name+'.pdf';
+                                    downloadLink.click();
+                                  }
+                                  
+                                })
+                                .catch(error => {
+                                  console.error('Error:', error);
+                                  console.log(name)
+                                });
+                                
+                                // Function to get CSRF token from cookie
+                                function getCookie(name) {
+                                  var cookieValue = null;
+                                  if (document.cookie && document.cookie !== '') {
+                                    var cookies = document.cookie.split(';');
+                                    for (var i = 0; i < cookies.length; i++) {
+                                      var cookie = cookies[i].trim();
+                                      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  return cookieValue;
+                                }
+                              }
+                          </code>
+                        </pre>
+                      </div>
+                      </p>
+                      
+                    </blockquote>
+                  </div>
+                </div>
+                 <!-- end of row --> 
             </div>
         </div>
         

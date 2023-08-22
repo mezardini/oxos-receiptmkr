@@ -11,3 +11,5 @@ procfile
 Dockerfile
 mysite.log
 /pdfprint
+/templatess
+/pdftemplates
