@@ -5,11 +5,7 @@ myvenv
 db.sqlite3  
 /static  
 .DS_Store
-/receiptmkr.env
-fly.toml
-procfile
-Dockerfile
-mysite.log
+receiptmkr.env
 /pdfprint
 /templatess
 /pdftemplates
