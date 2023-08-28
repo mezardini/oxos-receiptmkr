@@ -11,6 +11,12 @@ class Seller(models.Model):
     def __str__(self):
         return self.biz_code
     
+class ReceiptDetails(models.Model):
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    items = models.TextField()
+    receipt_code = models.CharField(max_length=20)
+
 class PaymentLogs(models.Model):
     SUCCESS = 'Success'
     FAILED = 'Failed'

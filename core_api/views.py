@@ -18,7 +18,7 @@ import pdfkit
 from datetime import datetime
 from django.core.mail import send_mail
 from django.db.models import F
-from frontend.models import Seller
+from frontend.models import Seller, ReceiptDetails
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -110,6 +110,7 @@ def download_pdf(request):
                     'total_price': total_price
                 })
             json_data = json.loads(request.body.decode('utf-8'))
+            
 
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 'business_url':business_url}
             template_loader = jinja2.FileSystemLoader('./')
@@ -262,6 +263,13 @@ class CreatePDF(APIView):
                 })
             json_data = json.loads(request.body.decode('utf-8'))
             total_cart_price = sum(cart_item['totalPrice'] for cart_item in cart_items_data)
+            # cart_itemsx = json.dumps(cart_items)
+            # receipt_create = ReceiptDetails.objects.create(
+            #     seller = biz,
+            #     items = cart_itemsx,
+            #     receipt_code = random_num
+            # )
+            # receipt_create.save
 
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 
                        'business_url':business_url, 'total_cart_price':total_cart_price, 'random_num':random_num}

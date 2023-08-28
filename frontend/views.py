@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.models import User, auth, Group
-from .models import Seller, PaymentLogs
+from .models import Seller, PaymentLogs, ReceiptDetails
 from django.http import HttpResponse
 import random
 from django.contrib import messages
@@ -21,7 +21,7 @@ from core_api.models import Business
 from core_api.models import ReceiptRequest
 import random
 import string
-
+from .services import create_seller_account
 
 # Create your views here.
 
@@ -69,12 +69,10 @@ class Dashboard(LoginRequiredMixin, View):
     
     def get(self, request ):
             
-            
-            user = User.objects.get(id=request.user.id)
-           
-            if User.objects.filter(id=request.user.id).exists() :
-                
+            if Seller.objects.filter(user=request.user.id).exists() :
+                user = User.objects.get(id=request.user.id)
                 biz = Seller.objects.get(user=user)
+                receipts = ReceiptDetails.objects.filter(seller=biz)
                 total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
                 specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
 
@@ -116,28 +114,50 @@ class Dashboard(LoginRequiredMixin, View):
                 bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
 
                 context = {'user':user, 'biz':biz, 'text':subscription_text, 'total_receipts':total_receipts, 
-                        'days_difference':days_difference, 'receipts_allocated':receipts_allocated_text, 'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2  }
+                        'days_difference':days_difference, 'receipts_allocated':receipts_allocated_text, 
+                        'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2 ,'receipts':receipts }
                 return render(request, 'dashboard.html', context)
             else:
-                
-                biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
+                # user = User.objects.get(id=request.user.id)
+                # biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
                 
 
-                users_in_group = Group.objects.get(name="Business").user_set.all()
-                if user not in users_in_group :
-                    seller_biz = Seller.objects.create(
-                        user = user,
-                        biz_code = biz_token
-                    )
-                    seller_biz.save()
-                    user_group = Group.objects.get(name="Business")
-                    user.groups.add(user_group)
+                # users_in_group = Group.objects.get(name="Business").user_set.all()
+                # if user not in users_in_group :
+                #     seller_biz = Seller.objects.create(
+                #         user = user,
+                #         biz_code = biz_token
+                #     )
+                #     seller_biz.save()
+                #     user_group = Group.objects.get(name="Business")
+                #     user.groups.add(user_group)
                     
-                    my_view = Dashboard()
-                    return my_view.get(request)
+                #     my_view = Dashboard()
+                #     return my_view.get(request)
+                id = request.user.id
+                create_seller = create_seller_account(request, id)
+                # return redirect('frontend:create_seller_account', pk=id)
+                # my_view = Dashboard()
+                # return my_view.get(request)
         
         
-       
+# def create_seller_account(request, pk):  # Note that 'request' should be added as the first parameter
+#     user = User.objects.get(id=pk)
+#     biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
+    
+#     users_in_group = Group.objects.get(name="Business").user_set.all()
+#     if user not in users_in_group:
+#         seller_biz = Seller.objects.create(
+#             user=user,
+#             biz_code=biz_token
+#         )
+#         seller_biz.save()
+#         # user_group = Group.objects.get(name="Business")
+#         # user.groups.add(user_group)
+#         # my_view = Dashboard()
+#         # return my_view.get(request)
+#         # return redirect('frontend:dashboard')
+#         return render(request, 'dashboard.html')
         
 
 
