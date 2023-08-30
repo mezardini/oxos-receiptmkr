@@ -8,7 +8,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['oxos-receiptmkr.onrender.com']
+ALLOWED_HOSTS = ['oxos-receiptmkr.onrender.com', '127.0.0.1']
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -70,6 +70,11 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # LOGIN_REDIRECT_URL = 'https://mezzala.onrender.com/'
 # LOGOUT_REDIRECT_URL = 'https://mezzala.onrender.com/'
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
+LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
+USE_X_FORWARDED_HOST = True
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'   
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
