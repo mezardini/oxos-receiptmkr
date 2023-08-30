@@ -1,0 +1,221 @@
+<style>
+    /* Our Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+/* Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins'
+}
+
+body {
+  height: 100vh;
+  background-color: #D3E1E1
+}
+
+/* The Receipt */
+.receipt {
+  width: 360px;
+  height: 720px;
+  background-color: white;
+  border-radius: 30px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-top: -360px; /* -half height and width to center */
+  margin-left: -180px;
+  box-shadow: 14px 14px 22px -18px;
+  padding: 20px
+}
+
+/* Heading */
+.name {
+  text-transform: uppercase;
+  text-align: center;
+  color: #3395ED;
+  letter-spacing: 10px;
+  font-size: 1.8em;
+  margin-top: 10px
+}
+
+/* Big thank */
+.greeting {
+ 
+  text-align: center;
+  color: #4B4A48;
+  
+}
+
+/* Order info */
+.order p {
+  font-size: 13px;
+  color: #4B4A48;
+  padding-left: 10px;
+  letter-spacing: .7px
+}
+
+/* Our line */
+hr {
+  border: .7px solid #ddd;
+  margin: 15px 0;
+}
+
+/* Order details */
+.details {
+  padding-left: 10px;
+  margin-bottom: 35px;
+  overflow: hidden
+}
+
+.details h3 {
+  font-weight: 400;
+  color: #4B4A48;
+  font-size: 1.5em;
+  margin-bottom: 15px
+}
+
+/* Image and the info of the order */
+.product {
+  float: left;
+  width: 83%
+}
+
+.product img {
+  width: 65px;
+  float: left
+}
+
+.product .info {
+  float: left;
+  margin-left: 5px
+}
+
+.product .info h4 {
+  color: #4B4A48;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-top: 10px
+}
+
+.product .info p {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Net price */
+.details > p {
+  color: #4B4A48;
+  margin-top: 25px;
+  font-size: 10px
+}
+
+/* Total price */
+.totalprice p {
+  padding-left: 10px
+}
+
+.totalprice .sub,
+.totalprice .del {
+  font-size: 13px;
+  color: #4B4A48
+}
+
+.totalprice span {
+  float: right;
+  margin-right: 17px
+}
+
+.totalprice .tot {
+  color: #4B4A48;
+  font-size: 15px
+}
+
+/* Footer */
+footer {
+  font-size: 10px;
+  text-align: center;
+  margin-top: 135px; /* You can make it with position try it */
+  color: #4B4A48
+}
+</style>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="receipt">
+    <h2 class="name"> {{business_name}} </h2>
+
+    <p class="greeting"> {{website}} </p>
+    
+    <br>
+    <br>
+    <!-- Order info -->
+    <div class="order">
+
+      <p>Customer name: {{name}} </p>
+      <p> Date : {{date}} </p>
+      <p> Receipt ID : {{random_num}} </p>
+
+    </div>
+
+    <hr>
+
+    <!-- Details -->
+    <div class="details">
+
+      <h3> Details </h3>
+      {% for item in cart_item %}
+          
+      
+      
+      <div class="product">
+
+     
+
+        <div class="info">
+
+          <h4> {{ item.item_name }} </h4>
+
+          <!-- <p> Color: Mercine </p> -->
+          <p> Qty: {{ item.quantity }} </p>
+
+        </div>
+        
+
+      </div>
+
+      <p>  &dollar; {{ item.total_price }}</p>
+      {% endfor %}
+    </div>
+
+    <!-- Sub and total price -->
+    <div class="totalprice">
+
+    
+
+      <hr>
+
+      <p class="tot"> Total <span>  &dollar; {{ total_cart_price }} </span> </p>
+
+    </div>
+
+    <!-- Footer -->
+    <footer> Your purchase matters to us. Thank you for being a part of our journey!</footer>
+
+  </div>

@@ -52,7 +52,8 @@
                 <!-- <a class="navbar-brand logo-text" href="{% url 'frontend:home' %}">Oxos</a> -->
 
                 <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation" aria-expanded="false">
-                    <span class=""><a class="btn-outline-sm" href="{% provider_login_url 'google' %}">Sign In </a></span>
+                    <!-- <span class=""><a class="btn-outline-sm" href="{% provider_login_url 'google' %}">Sign In </a></span> -->
+                    <span class=""><a class="btn-outline-sm" href="{% url 'frontend:signup' %}">Sign In </a></span>
                 </button>
 
                 <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault" style="justify-content: center;">
@@ -64,59 +65,7 @@
                             <a class="nav-link" href="#features">Features</a>
                         </li>
                       
-                        <li class="nav-item dropdown">
-                            <!-- <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Pricing</a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                                <div class="card text-center">
-                                     <div class="card-header">
-                                      USER TOKEN
-                                      <span><button onclick="copyCodeToken()" class="btn btn-success"><i class="far fa-copy"></i></button></span>
-                                    </div> -->
-                                    <!-- <div class="card-body">
-                                        <p>Platinum - $100, 1500 receipts</p>
-                                        <p>Gold - $50, 500 receipts</p>
-                                  
-                                    </div>
-                                    
-                                  </div>
-                            </ul> -->
-                            <a class="nav-link" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Pricing
-                              </a>
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <!-- <table class="table table-bordered">
-                                    <thead>
-                                      <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">Silver</th>
-                                        <th scope="col">Gold</th>
-                                        <th scope="col">Platinum</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">Receipt Quotas</th>
-                                        <td>200</td>
-                                        <td>1000</td>
-                                        <td>Unlimited</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">Customer Support</th>
-                                        <td><span class="general_check">✓</span></td>
-                                        <td><span class="general_check">✓</span></td>
-                                        <td><span class="general_check">✓</span></td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">Price</th>
-                                        <td> <span class="btn-solid-lg">$20</span></td>
-                                        <td><span class="btn-solid-lg">$50</span></td>
-                                        <td><span class="btn-solid-lg">$100</span></td>
-                                      </tr>
-                                    </tbody>
-                                  </table> -->
-                                  <p>Pricing is currently free</p>
-                              </div>
-                        </li> 
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="#contactus">Contact Us</a>
                         </li>
@@ -128,7 +77,7 @@
                         {% if request.user.is_authenticated %}
                         <a class="btn-outline-sm" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                         {% else %}
-                        <a class="btn-outline-sm"  href="{% provider_login_url 'google' %}">Sign In</a>
+                        <a class="btn-outline-sm"  href="{% url 'frontend:signup' %}">Sign In</a>
                         {% endif %}
                         
                     </span>
@@ -138,19 +87,22 @@
         <!-- end of navigation -->
 
         
-       
+        
 
         <div  class="header">
             <div class="container">
+                <div class="text-container text-center modalx" id="myDiv" style=" display:flex; justify-content: center;">
+                <p class="alert alert-info text-center" role="alert" >This website loads slowly because it is hosted across free plans <button type="button" onclick="removeDiv()" class="btn-close" data-bs-dismiss="modalx" aria-label="Close"></button></p>
+                </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-container text-center">
                             <h1 class="h1-large" style="color: #000000;">Generate <span class="replace-me">receipts</span> for your customers on the fly </h1>
-                            <p class="p-large">Elevate your customer experience with beautifully designed receipts</p>
+                            <p class="p-large">The receipt is downloaded on your buyer's device after payment is confirmed</p>
                             {% if request.user.is_authenticated %}
                             <a class="btn-solid-lg" href="{% url 'frontend:dashboard'  %}">Dashboard</a>
                             {% else %}
-                            <a class="btn-solid-lg" href="{% provider_login_url 'google' %}">Get started for free</a>
+                            <a class="btn-solid-lg" href="{% url 'frontend:signup' %}">Get started for free</a>
                             <!-- <p class="p-large">* Free Trial, No Credit Card Required</p> -->
                             {% endif %}
                             
@@ -465,6 +417,11 @@
         <script src="{% static 'js/replaceme.min.js' %}"></script> <!-- ReplaceMe for rotating text -->
         <script src="{% static 'js/scripts.js' %}"></script> <!-- Custom scripts -->
         
-        
+        <script>
+            function removeDiv() {
+                var divToRemove = document.getElementById("myDiv");
+                divToRemove.parentNode.removeChild(divToRemove);
+            }
+            </script>
     </body>
 </html>

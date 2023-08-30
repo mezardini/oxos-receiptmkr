@@ -75,10 +75,6 @@
         </nav> <!-- end of navbar -->
         <!-- end of navigation -->
 
-        
-       
-
-
 
         <!-- Questions -->
         <div class="accordion-1">
@@ -103,13 +99,13 @@
                   <p>
                     Creates a new receipt based on the provided cart items. The request body should be a JSON object with the following fields:
                     <ul>
-                      <li><code>cart_items</code>: An array of cart item objects. Include Item name, Item Quantity and Total Price of the item</li>
+                      <li><code>cart_items</code>: An array of cart item objects. Includes Item name, Item Quantity and Total Price of each item</li>
                       <li><code>name</code>: Name of the seller's business.</li>
                       <li><code>token</code>: Authentication token of the seller.</li>
                       <li><code>website</code>: URL of the seller's website.</li>
                       <li><code>customer</code>: Email address of the customer.</li>
                     </ul>
-                    The API will respond with a PDF receipt file.
+                    The API will respond with a PDF receipt file which will be downloaded to the device of the buyer making a purchase from the client.
                   </p>
                 
                   <h2 style="color: black;">Example Usage</h2>
@@ -135,7 +131,7 @@
                                 };
                                 
                                 // Send a POST request to the Django REST API endpoint
-                                fetch('http://127.0.0.1:8000/api/create_pdf/', {
+                                fetch('https://oxos.xyz/api/create_pdf/', {
                                   method: 'POST',
                                   headers: {
                                     'Content-Type': 'application/json',

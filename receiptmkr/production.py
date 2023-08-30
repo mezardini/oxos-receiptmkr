@@ -29,6 +29,22 @@ DATABASES = {
 
     }
 }
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     'NAME': 'neondb',
+#     'USER': 'mezardini',
+#     'PASSWORD': '4PmLBUDY5FqJ',
+#     'HOST': 'ep-shy-dawn-89894175.us-east-2.aws.neon.tech',
+#     'PORT': '5432',
+#   }
+# }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # AWS_S3_FILE_OVERWRITE = False
 # AWS_DEFAULT_ACL = None
@@ -47,7 +63,20 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+
+#_psycopg2
+
 # SITE_ID = 1
 
 # LOGIN_REDIRECT_URL = 'https://mezzala.onrender.com/'
 # LOGOUT_REDIRECT_URL = 'https://mezzala.onrender.com/'
+
+ADMIN_MEDIA_PREFIX = '/static/admin/'   
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

@@ -8,9 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 # from .views import makeReceipt, createBusiness, createReceipt
 
 urlpatterns = [
-    
-    
-    path('create_receipt/', csrf_exempt(views.download_pdf), name='download'),
     path('create_pdf/', CreatePDF.as_view(), name='create_pdf'),
 ]
 
