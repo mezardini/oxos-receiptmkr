@@ -37,17 +37,16 @@ class Home(View):
         return render(request, 'index.html', context)
     def post(self, request):
         if request.method == 'POST':
-            body = request.POST['message_body'],
+            body = request.POST['message_body']
             sender = request.POST['sender_email']
-            mail = EmailMessage(
-                    "Message from " + sender,
-                    body,
-                    'settings.EMAIL_HOST_USER',
-                    ['mezardini@gmail.com'],
-                )
-            mail.fail_silently = False
-            mail.content_subtype = 'html'
-            mail.send()
+            send_mail(
+            'Message from ' + sender,
+            body,
+            'settings.EMAIL_HOST_USER',
+            ['mezardini@gmail.com'],
+            fail_silently=False,
+        )
+        
 
 def documentation(request):
     
