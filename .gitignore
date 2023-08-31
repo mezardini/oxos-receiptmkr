@@ -11,3 +11,4 @@ receiptmkr/.env
 /templatess
 /pdftemplates
 mysite.log
+templates/password_reset.html

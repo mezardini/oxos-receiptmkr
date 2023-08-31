@@ -22,6 +22,7 @@ from core_api.models import ReceiptRequest
 import random
 import string
 from .services import create_seller_account
+ 
 
 # Create your views here.
 
@@ -150,10 +151,18 @@ class SignUp(View):
                         messages.error(request, "User already exists.")
                         return redirect('signup')
                     else:
+                        html_message = loader.render_to_string(
+                            'verify-email.html',
+                            {
+                                'user': first_name,
+                                'token': SignUp.token
+                            }
+
+                            )
                     
                         send_mail(
-                            'Message from Oxos',
-                            SignUp.token,
+                            'Subject: Verify Your Account - Welcome to Oxos-ReceiptMkr!',
+                            html_message,
                             'mezardini@gmail.com',
                             [email],
                             fail_silently=False,
@@ -224,7 +233,7 @@ def verifymail(request, pk):
 
 def signout(request):
     logout(request)
-    return redirect('frontend:signup') 
+    return redirect('frontend:signin') 
 
     
 

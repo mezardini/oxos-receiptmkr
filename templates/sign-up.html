@@ -108,7 +108,7 @@
                                             </div>
                                             <div class="text-center"><button type="submit" class="btn btn-xl btn-outline-dark" >Sign Up</button></div>
                                 </form>
-                                {% comment %} <p >Already a member? Click <a href="{% url 'signin' %}">here</a> to sign in</p> {% endcomment %}
+                                <p >Already a member? Click <a href="{% url 'frontend:signin' %}">here</a> to sign in</p>
                               </div>
                             {% comment %} <div class="col-12 text-center">
                                 <button class="btn btn-outline-dark"><a href="{% provider_login_url 'google' %}" style="text-decoration:none"><h5 style="color: rgb(3, 3, 3);"><img src="{% static 'images/Google.svg' %}"> Sign in with Google</h5></a></button>

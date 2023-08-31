@@ -5,6 +5,9 @@ from .views import Dashboard, Home, SignUp
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+
+
 app_name = "frontend"
 
 
@@ -16,8 +19,6 @@ urlpatterns = [
     path('verifyemail/<int:pk>/', views.verifymail, name='verifymail'),
     path('signout/', views.signout, name='signout'),
     path('dashboard/', Dashboard.as_view(), name='dashboard'),
-    # path('payment/<int:pk>/<str:transaction_id>/<str:status>/<int:amount>/', views.paymentLog, name='paymentlog'),
-
     
 ]
 
