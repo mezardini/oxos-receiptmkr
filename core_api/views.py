@@ -78,18 +78,19 @@ class CreatePDF(APIView):
 
             context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 
                        'business_url':business_url, 'total_cart_price':total_cart_price, 'random_num':random_num}
+            
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
             template = template_env.get_template('templates/newreceipt.html')
             output_text = template.render(context)
+
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
-            filename = name+'.pdf'
-            pdfkit.from_string(output_text, 'pdfprint/'+filename, configuration=config, options={"enable-local-file-access": ""})
-            file_path = 'pdfprint/'+filename
-            FilePointer = open(file_path,"rb")
-            response = FileResponse(FilePointer)
-            response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
+
+            pdf_bytes = pdfkit.from_string(output_text, False, configuration=config, options={"enable-local-file-access": ""})
+
+            response = HttpResponse(pdf_bytes, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename=' + name + '.pdf'
             serializer_class = ReceiptRequestSerializer
             data = {'receipt_name':name, 'user_no':token }
             serializer = ReceiptRequestSerializer(data=data)
