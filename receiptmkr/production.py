@@ -18,17 +18,17 @@ CSRF_COOKIE_SECURE = True
 # AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
 # AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env('NAME'),
-#         'PASSWORD': env('PASSWORD'),
-#         'HOST': env('HOST'),
-#         'PORT': env('PORT'),
-#         'USER': env('USER'),
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('NAME'),
+        'PASSWORD': env('PASSWORD'),
+        'HOST': env('HOST'),
+        'PORT': env('PORT'),
+        'USER': env('USER'),
 
-#     }
-# }
+    }
+}
 # DATABASES = {
 #   'default': {
 #     'ENGINE': 'django.db.backends.postgresql',
@@ -39,12 +39,7 @@ CSRF_COOKIE_SECURE = True
 #     'PORT': '5432',
 #   }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
 
 # AWS_S3_FILE_OVERWRITE = False
 # AWS_DEFAULT_ACL = None
@@ -72,9 +67,9 @@ SOCIALACCOUNT_PROVIDERS = {
 # LOGOUT_REDIRECT_URL = 'https://mezzala.onrender.com/'
 
 SITE_ID = 1
-LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
-LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
-USE_X_FORWARDED_HOST = True
+# LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
+# LOGIN_REDIRECT_URL = 'https://oxos-receiptmkr.onrender.com/dashboard/'
+# USE_X_FORWARDED_HOST = True
 
 ADMIN_MEDIA_PREFIX = '/static/admin/'   
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')

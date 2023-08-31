@@ -116,10 +116,110 @@ class Dashboard(LoginRequiredMixin, View):
                 
 
 
-def signup(request):
-   
-    return render(request, 'sign-up.html')
+class SignUp(View):
+    token =  str(random.randint(100001,999999))
+    
+    def get(self, request):
+        return render(request, 'sign-up.html')
 
+    def post(self, request):
+        if request.method == 'POST':
+                username = request.POST.get('email')
+                first_name = request.POST.get('username')
+                email = request.POST.get('email')
+                password1 = request.POST.get('password1')
+                password2 = request.POST.get('password2')
+                # global token
+                # token =  str(random.randint(100001,999999))
+
+                
+                if User.objects.filter(email=email).exists():
+                        messages.error(request, "User already exists.")
+                        return redirect('frontend:signup')
+
+                if not request.POST.get('password1'):
+                    messages.error(request, "Password cannot be blank.")
+                    return redirect('frontend:signup')
+
+                if password1 != password2:
+                    messages.error(request, "Passwords do not match.")
+                    return redirect('frontend:signup')
+
+                if password1 == password2:
+                    if User.objects.filter(email=email).exists():
+                        messages.error(request, "User already exists.")
+                        return redirect('signup')
+                    else:
+                    
+                        send_mail(
+                            'Message from Oxos',
+                            SignUp.token,
+                            'mezardini@gmail.com',
+                            [email],
+                            fail_silently=False,
+                        )
+                        print(SignUp.token)                    
+                        user = User.objects.create_user(username=username,first_name=first_name, password=password1, email=email)
+                        
+                        user.is_active = False
+                        user.save()
+                        
+                        # my_page = VerifyEmail()
+                        # return my_page.get(request, token, user)
+                        return redirect('frontend:verifymail', pk=user.id)
+        return render(request, 'sign-up.html')
+
+def signin(request):
+
+    if request.method == 'POST':
+        username = request.POST['email']
+        password = request.POST['password']
+
+        if not request.POST.get('email'):
+            messages.error(request, "Email cannot be blank.")
+            return redirect('frontend:signin')
+
+        if not request.POST.get('password'):
+            messages.error(request, "Password cannot be blank.")
+            return redirect('frontend:signin')
+
+        user = auth.authenticate(request, username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('frontend:dashboard')
+        else:
+            messages.error(request, "Incorrect username or password.")
+            return render(request, 'login.html')
+
+    return render(request, 'login.html')
+
+
+def verifymail(request, pk):
+    user = User.objects.get(id=pk) 
+    if request.method == 'POST':
+        entetoken = request.POST.get('token')
+        entered_token = str(entetoken)
+        if entetoken == SignUp.token:
+            messages.error(request, "Email validated, you can now signin.")
+
+            user.is_active = True
+            user.save()
+            return redirect('frontend:signin')
+            # my_biz = CreateBusiness()
+            # return my_biz.get(request, user.id)
+            
+
+        elif entered_token != SignUp.token:
+            messages.error(request, "Token incorrect.")
+            user.is_active = False
+            user.save()
+            print(SignUp.token) 
+            return redirect('frontend:verifymail') 
+            # my_view = Creator()
+            # return my_view.get(request)
+        
+    return render(request, 'verify.html')
 
 
 def signout(request):
