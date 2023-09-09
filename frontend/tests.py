@@ -6,6 +6,7 @@ from .models import Seller, PaymentLogs
 from django.contrib.auth.models import User
 
 
+
 class SellerTestCase(TestCase):
     def setUp(self):
         # Set up any necessary data for the tests

@@ -36,93 +36,71 @@ from xhtml2pdf import pisa
 class CreatePDF(APIView):
 
     def post(self, request):
-        json_data = json.loads(request.body.decode('utf-8'))
-        name = json_data.get('name', '')
-        token = json_data.get('token', '')
-        business_name = json_data.get('name', '')
-        customer_email = json_data.get('customer', '')
-        business_url = json_data.get('website', '')
-        user_no = token[-1]
-        biz = Seller.objects.get(biz_code=token)
-        seller = Seller.objects.get(user=user_no)
-        seller_mail = seller.user.email
-        allocation_quota = seller.receipt_allocation
-        random_num = str(random.randint(11111,99999)) + str(user_no)
-        if allocation_quota > 0:
-        
-            date = datetime.today().strftime("%d %b, %y")
-            cart_items = request.POST.get('cartItems', {})
-            cart_item_details = []
-          
-
-            # Access the cart items data and additional fields
-            cart_items_data = json_data.get('cart_items', [])
-            name = json_data.get('name', '')
-
-            for cart_item in cart_items_data:
-                quantity = cart_item['quantity']
-                item_name = cart_item['itemName']
-                item_price = cart_item['itemPrice']
-                total_price = cart_item['totalPrice']
-
-                # Perform any processing or database operations with the cart item data
-                # Here, we're just appending the details to a list to be passed to the template
-                cart_item_details.append({
-                    'quantity': quantity,
-                    'item_name': item_name,
-                    'item_price': item_price,
-                    'total_price': total_price
-                })
+        try:
+            # Parse JSON data from the request body
             json_data = json.loads(request.body.decode('utf-8'))
+            name = json_data.get('name', '')
+            token = json_data.get('token', '')
+            business_name = json_data.get('name', '')
+            customer_email = json_data.get('customer', '')
+            business_url = json_data.get('website', '')
+
+            # Extract user_no from token
+            user_no = token[-1]
+
+            # Retrieve seller and verify quota
+            seller = get_object_or_404(Seller, biz_code=token, user=user_no)
+            allocation_quota = seller.receipt_allocation
+
+            if allocation_quota <= 0:
+                return HttpResponse('Quota exceeded')
+
+            # Extract cart items data
+            cart_items_data = json_data.get('cart_items', [])
             total_cart_price = sum(cart_item['totalPrice'] for cart_item in cart_items_data)
 
-            context = { 'name':name, 'cart_item':cart_item_details, 'date':date, 'business_name':business_name, 
-                       'business_url':business_url, 'total_cart_price':total_cart_price, 'random_num':random_num}
-            
+            # Prepare context for the PDF template
+            context = {
+                'name': name,
+                'cart_item_details': cart_items_data,
+                'date': datetime.today().strftime("%d %b, %y"),
+                'business_name': business_name,
+                'business_url': business_url,
+                'total_cart_price': total_cart_price,
+                'random_num': str(random.randint(11111, 99999)) + str(user_no),
+            }
+
+            # Render the HTML template to string
             template_loader = jinja2.FileSystemLoader('./')
             template_env = jinja2.Environment(loader=template_loader)
             template = template_env.get_template('templates/newreceipt.html')
             output_text = template.render(context)
 
+            # Configure wkhtmltopdf
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
 
+            # Convert HTML to PDF
             pdf_bytes = pdfkit.from_string(output_text, False, configuration=config, options={"enable-local-file-access": ""})
 
+            # Prepare PDF response
             response = HttpResponse(pdf_bytes, content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename=' + name + '.pdf'
-            serializer_class = ReceiptRequestSerializer
-            data = {'receipt_name':name, 'user_no':token }
+
+            # Save a record of the receipt request
+            data = {'receipt_name': name, 'user_no': token}
             serializer = ReceiptRequestSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-            
-            seller = Seller.objects.filter(user=user_no).update(receipt_allocation=F('receipt_allocation') -1)
-            
-            return HttpResponse(response, content_type='application/pdf')
-        
-            
-        else:
-            
-            # html_message = loader.render_to_string(
-            #     'exceededemail.html',
-            #     {
-            #         'user_name': biz.user.username
-            #     }
 
-            #     )
-                
-            # mail = EmailMessage(
-            #         "Registered",
-            #         html_message,
-            #         'settings.EMAIL_HOST_USER',
-            #         [biz.user.email],
-            #     )
-            # mail.fail_silently = False
-            # mail.content_subtype = 'html'
-            # mail.send()
-            return HttpResponse('Quota exceeded')
+            # Update seller's receipt_allocation
+            seller.receipt_allocation -= 1
+            seller.save()
 
+            return response
+
+        except Exception as e:
+            return Response({'error': str(e)})
 
 def sendReceipt(response, name):
     response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'

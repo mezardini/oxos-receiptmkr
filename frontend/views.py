@@ -63,58 +63,46 @@ def error_404_view(request, exception):
     return render(request, '404.html')
 
 class Dashboard(LoginRequiredMixin, View):
-    login_url = 'frontend:signup'  
-    
+    login_url = 'frontend:signup'
     template_name = 'dashboard.html'
-    
-    def get(self, request ):
+
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+        
+        if Seller.objects.filter(user=user).exists():
+            biz = Seller.objects.get(user=user)
+            receipts = ReceiptDetails.objects.filter(seller=biz)
+            total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
             
-            if Seller.objects.filter(user=request.user.id).exists() :
-                user = User.objects.get(id=request.user.id)
-                biz = Seller.objects.get(user=user)
-                receipts = ReceiptDetails.objects.filter(seller=biz)
-                total_receipts = ReceiptRequest.objects.filter(user_no=biz.biz_code).count()
-                specific_date = datetime(2023, 5, 29)  # Example: Year, Month, Day
+            specific_date = datetime(2023, 5, 29)
+            current_date = datetime.now()
+            days_difference = (specific_date - current_date).days
+            receipts_allocated = biz.receipt_allocation
+            receipts_allocated_text = receipts_allocated if receipts_allocated <= 100000 else 'Unlimited'
 
-                # Get the current date
-                current_date = datetime.now()
-                
-                # Calculate the difference in days
-                days_difference = (specific_date - current_date).days
-                receipts_allocated = biz.receipt_allocation
-                receipts_allocated_text = receipts_allocated
-                if receipts_allocated > 100000:
-                    receipts_allocated_text = 'Unlimited'
+            bar_width_1 = 5 if total_receipts == 0 else (total_receipts / (total_receipts + receipts_allocated)) * 100
+            bar_width_2 = (receipts_allocated / (total_receipts + receipts_allocated)) * 100
 
-                
-               
-                    
+            context = {
+                'user': user,
+                'biz': biz,
+                'total_receipts': total_receipts,
+                'days_difference': days_difference,
+                'receipts_allocated': receipts_allocated_text,
+                'bar_width_1': bar_width_1,
+                'bar_width_2': bar_width_2,
+                'receipts': receipts,
+            }
+            return render(request, self.template_name, context)
 
-                bar_width_1 = 5 #the value should be 0(zero) but i don't want the progress bar blank
-                if total_receipts > 0:
-                    bar_width_1 = (total_receipts/(total_receipts+receipts_allocated))*100
-                bar_width_2 = (receipts_allocated/(total_receipts+receipts_allocated))*100
-
-                context = {'user':user, 'biz':biz,  'total_receipts':total_receipts, 
-                        'days_difference':days_difference, 'receipts_allocated':receipts_allocated_text, 
-                        'bar_width_1':bar_width_1, 'bar_width_2':bar_width_2 ,'receipts':receipts }
-                return render(request, 'dashboard.html', context)
-            else:
-                
-                user = User.objects.get(id=request.user.id)
-                biz_token = 'BC'+ str(random.randint(11111,99999)) + str(user.id)
-                
-                # users_in_group = Group.objects.get(name="Business").user_set.all()
-                # if user not in users_in_group:
-                seller_biz = Seller.objects.create(
-                    user=user,
-                    biz_code=biz_token
-                )
-                seller_biz.save()
-                
-                my_view = Dashboard()
-                return my_view.get(request)
-                
+        else:
+            biz_token = 'BC' + str(random.randint(11111, 99999)) + str(user.id)
+            seller_biz = Seller.objects.create(
+                user=user,
+                biz_code=biz_token
+            )
+            seller_biz.save()
+            return redirect('dashboard')
 
 
 class SignUp(View):
