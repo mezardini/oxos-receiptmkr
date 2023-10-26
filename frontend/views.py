@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.models import User, auth, Group
@@ -32,6 +32,27 @@ class Home(View):
     template_name = 'index.html'
     # string = (''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase, k=8)))
     def get(self, request):
+        visitor_ip = visitor_ip = request.META.get('REMOTE_ADDR')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            # The IP addresses are usually comma-separated.
+            ip_list = x_forwarded_for.split(',')
+            # The client's IP address is the first in the list.
+            visitor_ip = ip_list[0].strip()
+        else:
+            # If 'HTTP_X_FORWARDED_FOR' is not present, use 'REMOTE_ADDR'.
+            visitor_ip = request.META.get('REMOTE_ADDR')
+
+        
+        # current_datetime = datetime.now()
+        current_datetime = datetime.today().strftime("%d %b, %y %H:%M:%S")
+        send_mail(
+                'New Visitor',
+                'A visitor ' + visitor_ip + ' has been on scoracle at ' + current_datetime,
+                'settings.EMAIL_HOST_USER',
+                ['mezardini@gmail.com'],
+                fail_silently=False,
+                )
         # access_string = Home.string
         
         context = {}
@@ -106,64 +127,56 @@ class Dashboard(LoginRequiredMixin, View):
 
 
 class SignUp(View):
-    token =  str(random.randint(100001,999999))
-    
+    def generate_random_token(self):
+        return str(random.randint(100001, 999999))
+
     def get(self, request):
         return render(request, 'sign-up.html')
 
     def post(self, request):
         if request.method == 'POST':
-                username = request.POST.get('email')
-                first_name = request.POST.get('username')
-                email = request.POST.get('email')
-                password1 = request.POST.get('password1')
-                password2 = request.POST.get('password2')
-                # global token
-                # token =  str(random.randint(100001,999999))
+            username = request.POST.get('email')
+            first_name = request.POST.get('username')
+            email = request.POST.get('email')
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
 
-                
-                if User.objects.filter(email=email).exists():
-                        messages.error(request, "User already exists.")
-                        return redirect('frontend:signup')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "User already exists.")
+                return redirect('frontend:signup')
 
-                if not request.POST.get('password1'):
-                    messages.error(request, "Password cannot be blank.")
-                    return redirect('frontend:signup')
+            if not password1:
+                messages.error(request, "Password cannot be blank.")
+                return redirect('frontend:signup')
 
-                if password1 != password2:
-                    messages.error(request, "Passwords do not match.")
-                    return redirect('frontend:signup')
+            if password1 != password2:
+                messages.error(request, "Passwords do not match.")
+                return redirect('frontend:signup')
 
-                if password1 == password2:
-                    if User.objects.filter(email=email).exists():
-                        messages.error(request, "User already exists.")
-                        return redirect('signup')
-                    else:
-                        html_message = loader.render_to_string(
-                            'verify-email.html',
-                            {
-                                'user': first_name,
-                                'token': SignUp.token
-                            }
+            token = self.generate_random_token()
 
-                            )
-                    
-                        send_mail(
-                            'Subject: Verify Your Account - Welcome to Oxos-ReceiptMkr!',
-                            html_message,
-                            'mezardini@gmail.com',
-                            [email],
-                            fail_silently=False,
-                        )
-                        print(SignUp.token)                    
-                        user = User.objects.create_user(username=username,first_name=first_name, password=password1, email=email)
-                        
-                        user.is_active = False
-                        user.save()
-                        
-                        # my_page = VerifyEmail()
-                        # return my_page.get(request, token, user)
-                        return redirect('frontend:verifymail', pk=user.id)
+            html_message = loader.render_to_string(
+                'verify-email.html',
+                {
+                    'user': first_name,
+                    'token': token
+                }
+            )
+
+            send_mail(
+                'Subject: Verify Your Account - Welcome to Oxos-ReceiptMkr!',
+                html_message,
+                'mezardini@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+
+            user = User.objects.create_user(username=username, first_name=first_name, password=password1, email=email)
+            user.is_active = False
+            user.save()
+
+            return redirect('frontend:verifymail', pk=user.id)
+
         return render(request, 'sign-up.html')
 
 def signin(request):
@@ -193,28 +206,21 @@ def signin(request):
 
 
 def verifymail(request, pk):
-    user = User.objects.get(id=pk) 
+    user = get_object_or_404(User, id=pk) 
+    
     if request.method == 'POST':
-        entetoken = request.POST.get('token')
-        entered_token = str(entetoken)
-        if entetoken == SignUp.token:
-            messages.error(request, "Email validated, you can now signin.")
-
+        entered_token = request.POST.get('token')
+        
+        if entered_token == SignUp.token:
             user.is_active = True
             user.save()
+            messages.success(request, "Email validated. You can now sign in.")
             return redirect('frontend:signin')
-            # my_biz = CreateBusiness()
-            # return my_biz.get(request, user.id)
-            
 
-        elif entered_token != SignUp.token:
-            messages.error(request, "Token incorrect.")
-            user.is_active = False
-            user.save()
-            print(SignUp.token) 
-            return redirect('frontend:verifymail') 
-            # my_view = Creator()
-            # return my_view.get(request)
+        messages.error(request, "Token incorrect.")
+        user.is_active = False
+        user.save()
+        return redirect('frontend:verifymail') 
         
     return render(request, 'verify.html')
 
