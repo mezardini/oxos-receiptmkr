@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework import generics, status, viewsets, renderers
-from .serializers import  BusinessSerializer, CartItemSerializer, ReceiptRequestSerializer
+from .serializers import BusinessSerializer, CartItemSerializer, ReceiptRequestSerializer
 from .models import PdfFile, PdfFilepath, Business, ReceiptRequest
 from django.http import FileResponse
 from rest_framework.decorators import action
@@ -29,8 +29,7 @@ from django.core.mail import EmailMessage
 from django.contrib.auth.models import User, auth, Group
 from io import BytesIO
 from django.template.loader import get_template
-from xhtml2pdf import pisa  
-
+from xhtml2pdf import pisa
 
 
 class CreatePDF(APIView):
@@ -57,8 +56,10 @@ class CreatePDF(APIView):
 
             # Extract cart items data
             cart_items_data = json_data.get('cart_items', [])
-            total_cart_price = sum(cart_item['totalPrice'] for cart_item in cart_items_data)
+            total_cart_price = sum(cart_item['totalPrice']
+                                   for cart_item in cart_items_data)
 
+            receipt_id = str(random.randint(11111, 99999)) + str(user_no)
             # Prepare context for the PDF template
             context = {
                 'name': name,
@@ -67,25 +68,30 @@ class CreatePDF(APIView):
                 'business_name': business_name,
                 'business_url': business_url,
                 'total_cart_price': total_cart_price,
-                'random_num': str(random.randint(11111, 99999)) + str(user_no),
+                'random_num': receipt_id,
             }
 
-            # Render the HTML template to string
-            template_loader = jinja2.FileSystemLoader('./')
-            template_env = jinja2.Environment(loader=template_loader)
-            template = template_env.get_template('templates/newreceipt.html')
+            template = loader.get_template('templates/newreceipt.html')
             output_text = template.render(context)
 
-            # Configure wkhtmltopdf
-            path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-            config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+            # Create a PDF file
+            pdf_file = open('output.pdf', 'wb')
+            pisa_status = pisa.CreatePDF(output_text, dest=pdf_file)
 
-            # Convert HTML to PDF
-            pdf_bytes = pdfkit.from_string(output_text, False, configuration=config, options={"enable-local-file-access": ""})
+            # Close the PDF file
+            pdf_file.close()
+
+            # Check if PDF creation was successful
+            if pisa_status.err:
+                return HttpResponse('PDF generation failed!', content_type='text/plain')
 
             # Prepare PDF response
-            response = HttpResponse(pdf_bytes, content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename=' + name + '.pdf'
+            with open('output.pdf', 'rb') as pdf_file:
+                response = HttpResponse(
+                    pdf_file.read(), content_type='application/pdf')
+
+            response['Content-Disposition'] = 'attachment; filename=' + \
+                name+receipt_id + '.pdf'
 
             # Save a record of the receipt request
             data = {'receipt_name': name, 'user_no': token}
@@ -102,8 +108,7 @@ class CreatePDF(APIView):
         except Exception as e:
             return Response({'error': str(e)})
 
+
 def sendReceipt(response, name):
     response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
     return response
-
-        
