@@ -16,7 +16,7 @@ import os
 import environ
 from dotenv import load_dotenv
 env = environ.Env()
-environ.Env.read_env() 
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        
+
     ],
 }
 
@@ -73,15 +73,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    
-    
+
+
 
 ]
-DEFAULT_AUTHENTICATION_CLASSES =[ 
-    'rest_framework.authentication.BasicAuthentication', 
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.BasicAuthentication',
     'rest_framework.authentication.SessionAuthentication',
-      ]
-
+]
 
 
 ROOT_URLCONF = 'receiptmkr.urls'
@@ -97,7 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
+
             ],
         },
     },
@@ -156,16 +155,17 @@ STATICFILES_DIRS = [
     BASE_DIR, 'static'
 ]
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-MEDIA_ROOT = os.path.join(BASE_DIR,"media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
 CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:5500',
     'http://127.0.0.1:8000',
-    'http://127.0.0.1:5500',
+    'http://127.0.0.1:5501',
 ]
 CORS_ALLOWED_ORIGINS = ['*',]
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','http://*.127.0.0.1', 'http://127.0.0.1:5500',]
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com',
+                        'http://*.127.0.0.1', 'http://127.0.0.1:5500',]
 CORS_ORIGIN_ALLOW_ALL = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -176,17 +176,14 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
-
-
-SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_STORE_TOKENS = True
 
 # Additional configuration settings
 SOCIALACCOUNT_QUERY_EMAIL = True
-ACCOUNT_LOGOUT_ON_GET= True
+ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
-
 
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -214,14 +211,13 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
 
 
 LOGGING = {
@@ -246,7 +242,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'INFO',
-            #'filters': ['require_debug_true'],
+            # 'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
         },
         'django.server': {
@@ -256,7 +252,7 @@ LOGGING = {
         },
         'mail_admins': {
             'level': 'ERROR',
-            #'filters': ['require_debug_false'],
+            # 'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         }
     },
