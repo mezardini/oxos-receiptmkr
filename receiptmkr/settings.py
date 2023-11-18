@@ -163,11 +163,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:5501',
     'https://oxos-receiptmkr.onrender.com',
-    '*'
 ]
-CORS_ALLOWED_ORIGINS = ['*',]
-CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com',
-                        'http://*.127.0.0.1', 'http://127.0.0.1:5500',  'http://127.0.0.1:5501',]
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
