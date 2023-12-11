@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import UserRateThrottle
-from .models import Seller  # Import your Seller model
+from .models import Business  # Import your Seller model
 from .serializers import ReceiptRequestSerializer  # Import your serializer
 import xhtml2pdf.pisa as pisa
 
@@ -36,7 +36,7 @@ class CreatePDF(APIView):
             user_no = int(token[-1])  # Convert to integer
 
             # Retrieve seller and verify quota
-            seller = get_object_or_404(Seller, biz_code=token, user=user_no)
+            seller = get_object_or_404(Business, biz_code=token, user=user_no)
             allocation_quota = seller.receipt_allocation
 
             if allocation_quota <= 0:
