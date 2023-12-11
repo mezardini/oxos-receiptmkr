@@ -1,38 +1,25 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
+import json
+import random
+from datetime import datetime
+from io import BytesIO
 from django.http import HttpResponse
-from rest_framework.response import Response
+from django.template import loader
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework import generics, status, viewsets, renderers
-from .serializers import BusinessSerializer, CartItemSerializer, ReceiptRequestSerializer
-from .models import PdfFile, PdfFilepath, Business, ReceiptRequest
-from django.http import FileResponse
-from rest_framework.decorators import action
-import random
-import jinja2
-import pdfkit
-from datetime import datetime
-from django.core.mail import send_mail
-from django.db.models import F
-from frontend.models import Seller, ReceiptDetails
-from rest_framework.decorators import api_view
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-from django.template import loader, Template
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from django.contrib.auth.models import User, auth, Group
-from io import BytesIO
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+from rest_framework.throttling import UserRateThrottle
+from .models import Seller  # Import your Seller model
+from .serializers import ReceiptRequestSerializer  # Import your serializer
+import xhtml2pdf.pisa as pisa
 
 
 class CreatePDF(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
+    throttle_scope = 'user'  # Use 'user' scope for authenticated users
 
     def post(self, request):
         try:
@@ -40,19 +27,21 @@ class CreatePDF(APIView):
             json_data = json.loads(request.body.decode('utf-8'))
             name = json_data.get('name', '')
             token = json_data.get('token', '')
-            business_name = json_data.get('name', '')
+            business_name = json_data.get(
+                'business_name', '')  # Fix the field name
             customer_email = json_data.get('customer', '')
             business_url = json_data.get('website', '')
 
             # Extract user_no from token
-            user_no = token[-1]
+            user_no = int(token[-1])  # Convert to integer
 
             # Retrieve seller and verify quota
             seller = get_object_or_404(Seller, biz_code=token, user=user_no)
             allocation_quota = seller.receipt_allocation
 
             if allocation_quota <= 0:
-                return HttpResponse('Quota exceeded')
+                # Return 429 for rate limiting
+                return HttpResponse('Quota exceeded', status=429)
 
             # Extract cart items data
             cart_items_data = json_data.get('cart_items', [])
@@ -60,6 +49,7 @@ class CreatePDF(APIView):
                                    for cart_item in cart_items_data)
 
             receipt_id = str(random.randint(11111, 99999)) + str(user_no)
+
             # Prepare context for the PDF template
             context = {
                 'name': name,
@@ -74,27 +64,20 @@ class CreatePDF(APIView):
             template = loader.get_template('templates/newreceipt.html')
             output_text = template.render(context)
 
-            # Create a PDF file
-            pdf_file = open('output.pdf', 'wb')
-            pisa_status = pisa.CreatePDF(output_text, dest=pdf_file)
-
-            # Close the PDF file
-            pdf_file.close()
-
-            # Check if PDF creation was successful
-            if pisa_status.err:
-                return HttpResponse('PDF generation failed!', content_type='text/plain')
+            # Create a PDF in-memory
+            pdf_buffer = BytesIO()
+            pisa.CreatePDF(output_text, dest=pdf_buffer)
 
             # Prepare PDF response
-            with open('output.pdf', 'rb') as pdf_file:
-                response = HttpResponse(
-                    pdf_file.read(), content_type='application/pdf')
+            pdf_buffer.seek(0)
+            response = HttpResponse(
+                pdf_buffer.read(), content_type='application/pdf')
 
             response['Content-Disposition'] = 'attachment; filename=' + \
-                name+receipt_id + '.pdf'
+                name + receipt_id + '.pdf'
 
             # Save a record of the receipt request
-            data = {'receipt_name': name, 'user_no': token}
+            data = {'receipt_name': name, 'user_no': user_no}
             serializer = ReceiptRequestSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
@@ -106,9 +89,5 @@ class CreatePDF(APIView):
             return response
 
         except Exception as e:
-            return Response({'error': str(e)})
-
-
-def sendReceipt(response, name):
-    response['Content-Disposition'] = 'attachment; filename='+name+'.pdf'
-    return response
+            # Return 500 for internal server error
+            return Response({'error': str(e)}, status=500)
